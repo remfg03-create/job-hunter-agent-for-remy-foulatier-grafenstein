@@ -1,0 +1,122 @@
+[
+  {
+    "id": "wttj-sample-001",
+    "title": "Sales & Partnerships Manager",
+    "company": "Ona Collective",
+    "location": "Paris, France",
+    "source": "welcome-to-the-jungle",
+    "url": "https://www.welcometothejungle.com/en/jobs/sample-001",
+    "contractType": "permanent",
+    "postedAt": "2026-05-28",
+    "salary": "€45k–€55k",
+    "description": "We are a roaming fine-dining and events collective looking for a Sales & Partnerships Manager to grow our private-event and brand-collaboration pipeline. You will own outreach to luxury brands, agencies and venues, negotiate partnership deals, and manage client relationships from first contact to event delivery. Ideal candidates have hospitality or events sales experience, fluent English and French, a strong network in the Paris lifestyle scene, and a feel for premium experiential dining. Familiarity with CRM tools and a track record of hitting revenue targets is a plus."
+  },
+  {
+    "id": "wttj-sample-002",
+    "title": "Event Project Manager (CDD 12 mois)",
+    "company": "Studio Lumière Events",
+    "location": "Paris, France",
+    "source": "welcome-to-the-jungle",
+    "url": "https://www.welcometothejungle.com/en/jobs/sample-002",
+    "contractType": "fixed-term",
+    "postedAt": "2026-05-30",
+    "salary": "€38k–€42k",
+    "description": "Fixed-term (12-month) role managing experiential brand events from concept to delivery. Coordinate suppliers, budgets, timelines and on-site teams for product launches, pop-ups and gala dinners. You should be highly organised, calm under pressure, fluent in French and English, and comfortable liaising with luxury and lifestyle clients. Experience with event production tools and vendor negotiation required."
+  },
+  {
+    "id": "apec-sample-001",
+    "title": "Chargé(e) de Développement Commercial - Événementiel",
+    "company": "Maison Hospitalité",
+    "location": "Paris, France",
+    "source": "apec",
+    "url": "https://www.apec.fr/candidat/recherche-emploi/sample-001",
+    "contractType": "permanent",
+    "postedAt": "2026-05-27",
+    "salary": "€40k + variable",
+    "description": "Nous recherchons un(e) Chargé(e) de Développement Commercial pour notre activité événementielle haut de gamme. Vous prospectez de nouveaux clients (marques, agences, entreprises), construisez des offres sur mesure et pilotez le cycle de vente jusqu'à la signature. Profil: expérience commerciale dans l'hospitality, l'événementiel ou le luxe, excellent relationnel, anglais courant. La connaissance de la scène lifestyle parisienne est un vrai atout."
+  },
+  {
+    "id": "apec-sample-002",
+    "title": "Responsable Marketing & Communication",
+    "company": "Brasserie Nomade",
+    "location": "Paris, France",
+    "source": "apec",
+    "url": "https://www.apec.fr/candidat/recherche-emploi/sample-002",
+    "contractType": "permanent",
+    "postedAt": "2026-05-25",
+    "salary": "€42k–€48k",
+    "description": "En tant que Responsable Marketing & Communication, vous définissez et déployez la stratégie de marque d'un concept food & beverage en pleine croissance. Vous gérez les réseaux sociaux, les partenariats d'influence, les campagnes et les relations presse. Profil créatif, sensible à l'univers lifestyle et culinaire, maîtrise des outils digitaux, anglais et français courants."
+  },
+  {
+    "id": "indeed-sample-001",
+    "title": "Business Development Manager - Hospitality",
+    "company": "Berlin Supper Club GmbH",
+    "location": "Berlin, Germany",
+    "source": "indeed",
+    "url": "https://de.indeed.com/viewjob?jk=sample-001",
+    "contractType": "permanent",
+    "postedAt": "2026-05-29",
+    "salary": "€48k–€58k",
+    "description": "We run a high-end supper club and private events brand in Berlin and are hiring a Business Development Manager to drive corporate and private bookings. Responsibilities: build a sales pipeline, pitch to agencies and brands, close deals and grow recurring accounts. You should be a confident communicator in English (German a plus), have B2B sales or events experience, and love the food, hospitality and lifestyle world."
+  },
+  {
+    "id": "indeed-sample-002",
+    "title": "Marketing & Brand Partnerships Coordinator",
+    "company": "Kreuzberg Collective",
+    "location": "Berlin, Germany",
+    "source": "indeed",
+    "url": "https://de.indeed.com/viewjob?jk=sample-002",
+    "contractType": "fixed-term",
+    "postedAt": "2026-05-26",
+    "salary": "€36k–€40k",
+    "description": "12-month contract supporting our marketing and brand-partnership efforts across events and pop-ups. You'll coordinate collaborations with lifestyle brands, manage content and social channels, and help produce experiential activations. We're after a creative, organised self-starter, fluent in English, ideally with some events or agency background."
+  },
+  {
+    "id": "linkedin-sample-001",
+    "title": "Account Manager - Experiential Events",
+    "company": "Atelier Events International",
+    "location": "Berlin, Germany",
+    "source": "linkedin",
+    "url": "https://www.linkedin.com/jobs/view/sample-001",
+    "contractType": "permanent",
+    "postedAt": "2026-05-31",
+    "salary": "€44k–€52k",
+    "description": "As Account Manager you are the main point of contact for our luxury and lifestyle clients, managing experiential events end to end. You handle briefs, budgets, creative proposals and client relationships, working closely with production teams. Requirements: client-facing events or agency experience, fluent English, strong organisation, and a genuine passion for premium hospitality experiences."
+  },
+  {
+    "id": "linkedin-sample-002",
+    "title": "Sales Manager - Lifestyle & Luxury Brands",
+    "company": "Côte Agency",
+    "location": "Paris, France",
+    "source": "linkedin",
+    "url": "https://www.linkedin.com/jobs/view/sample-002",
+    "contractType": "permanent",
+    "postedAt": "2026-05-24",
+    "salary": "€50k + commission",
+    "description": "We connect luxury and lifestyle brands with unforgettable event experiences. We're hiring a Sales Manager to develop new business with premium clients, build long-term partnerships, and represent the agency at industry events. You bring a network in luxury/lifestyle, proven sales results, fluent French and English, and an entrepreneurial mindset."
+  },
+  {
+    "id": "hellowork-sample-001",
+    "title": "Chef de Projet Événementiel (CDD)",
+    "company": "Collectif Saveurs",
+    "location": "Paris, France",
+    "source": "hellowork",
+    "url": "https://www.hellowork.com/fr-fr/emplois/sample-001.html",
+    "contractType": "fixed-term",
+    "postedAt": "2026-05-28",
+    "salary": "€35k–€39k",
+    "description": "CDD de 9 mois pour piloter l'organisation d'événements culinaires et expérientiels: repérage de lieux, coordination des prestataires, gestion budgétaire et logistique le jour J. Nous cherchons une personne rigoureuse, créative et à l'aise dans un environnement food & lifestyle, parlant français et anglais."
+  },
+  {
+    "id": "hellowork-sample-002",
+    "title": "Assistant(e) Marketing Événementiel",
+    "company": "Pop Paris Studio",
+    "location": "Paris, France",
+    "source": "hellowork",
+    "url": "https://www.hellowork.com/fr-fr/emplois/sample-002.html",
+    "contractType": "fixed-term",
+    "postedAt": "2026-05-22",
+    "salary": "€30k–€34k",
+    "description": "Au sein de notre studio créatif, vous assistez l'équipe marketing sur l'organisation d'événements et de pop-ups: création de contenu, gestion des réseaux sociaux, coordination des partenaires et suivi des campagnes. Première expérience en marketing ou événementiel appréciée, anglais et français courants, sensibilité lifestyle indispensable."
+  }
+]
