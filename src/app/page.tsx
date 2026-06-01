@@ -49,7 +49,17 @@ export default function Dashboard() {
       const res = await fetch("/api/scan", { method: "POST" });
       const result = await res.json();
       if (!result.ok) throw new Error(result.error);
-      await load();
+      // Use the scan response directly so results show even when serverless
+      // in-memory storage lives on a different instance than the next GET.
+      // (Add Vercel KV for cross-request persistence — see README.)
+      setData((prev) => ({
+        jobs: result.jobs,
+        applied: prev?.applied ?? [],
+        lastScan: result.scannedAt,
+        cv: prev?.cv ?? null,
+        aiEnabled: prev?.aiEnabled ?? false,
+        storeBackend: prev?.storeBackend ?? "memory",
+      }));
     } catch (e) {
       setScanError((e as Error).message);
     } finally {
