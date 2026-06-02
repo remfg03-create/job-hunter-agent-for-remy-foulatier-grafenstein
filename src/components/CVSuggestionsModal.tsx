@@ -12,7 +12,15 @@ const PRIORITY_STYLE: Record<string, string> = {
   low: "bg-sky-400/10 border-sky-300/25 text-sky-200",
 };
 
-export default function CVSuggestionsModal({ job, onClose }: { job: ScoredJob; onClose: () => void }) {
+export default function CVSuggestionsModal({
+  job,
+  cvText,
+  onClose,
+}: {
+  job: ScoredJob;
+  cvText?: string;
+  onClose: () => void;
+}) {
   const [items, setItems] = useState<CVSuggestion[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -24,7 +32,7 @@ export default function CVSuggestionsModal({ job, onClose }: { job: ScoredJob; o
         const res = await fetch("/api/cv-suggestions", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ jobId: job.id }),
+          body: JSON.stringify({ job, cv: cvText }),
         });
         const data = await res.json();
         if (!data.ok) throw new Error(data.error);

@@ -7,10 +7,12 @@ import { Sparkles, Mail, Check } from "./Icons";
 
 export default function CoverLetterModal({
   job,
+  cvText,
   onClose,
   onApplied,
 }: {
   job: ScoredJob;
+  cvText?: string;
   onClose: () => void;
   onApplied: (jobId: string) => void;
 }) {
@@ -28,7 +30,7 @@ export default function CoverLetterModal({
       const res = await fetch("/api/cover-letter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ jobId: job.id }),
+        body: JSON.stringify({ job, cv: cvText }),
       });
       const data = await res.json();
       if (!data.ok) throw new Error(data.error);
@@ -53,11 +55,17 @@ export default function CoverLetterModal({
       const res = await fetch("/api/apply", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ jobId: job.id, coverLetter: letter, to }),
+        body: JSON.stringify({ job, coverLetter: letter, to, cv: cvText }),
       });
       const data = await res.json();
       if (!data.ok) throw new Error(data.error);
-      setDraftMsg("Draft created in Gmail — review and send it from your Drafts folder.");
+      if (data.mode === "mailto") {
+        // Gmail not connected — open a prefilled email draft in the user's mail app.
+        window.location.href = data.mailto;
+        setDraftMsg(data.message || "Opened a prefilled email draft in your mail app.");
+      } else {
+        setDraftMsg("Draft created in Gmail — review and send it from your Drafts folder.");
+      }
       onApplied(job.id);
     } catch (e) {
       setError((e as Error).message);
@@ -121,7 +129,7 @@ export default function CoverLetterModal({
               disabled={applying || !letter}
               className="cursor-pointer inline-flex items-center gap-1.5 text-sm px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500/30 to-cyan-500/30 border border-emerald-300/30 text-emerald-50 hover:from-emerald-500/40 hover:to-cyan-500/40 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <Mail width={15} height={15} /> {applying ? "Creating draft…" : "Create Gmail draft"}
+              <Mail width={15} height={15} /> {applying ? "Preparing…" : "Create email draft"}
             </button>
           </div>
         </div>

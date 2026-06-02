@@ -31,16 +31,62 @@ export default function Dashboard() {
   const [coverJob, setCoverJob] = useState<ScoredJob | null>(null);
   const [suggestJob, setSuggestJob] = useState<ScoredJob | null>(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [cvText, setCvText] = useState<string | undefined>(undefined);
+
+  // Persist results in the browser so a reload doesn't lose them (serverless
+  // in-memory storage isn't shared across requests; add Vercel KV for server-side
+  // durability — see README).
+  const LS = "jha:dashboard:v1";
 
   const load = useCallback(async () => {
+    // Seed instantly from localStorage, then refresh metadata from the server.
+    try {
+      const cached = typeof window !== "undefined" ? window.localStorage.getItem(LS) : null;
+      if (cached) {
+        const c = JSON.parse(cached) as Partial<JobsResponse> & { cvText?: string };
+        setData((prev) => ({
+          jobs: c.jobs ?? [],
+          applied: c.applied ?? [],
+          lastScan: c.lastScan ?? null,
+          cv: c.cv ?? null,
+          aiEnabled: prev?.aiEnabled ?? false,
+          storeBackend: prev?.storeBackend ?? "memory",
+        }));
+        if (c.cvText) setCvText(c.cvText);
+      }
+    } catch {
+      /* ignore bad cache */
+    }
     const res = await fetch("/api/jobs");
-    setData(await res.json());
+    const server = (await res.json()) as JobsResponse;
+    setData((prev) => ({
+      // Prefer server jobs if it actually has them, else keep what we cached.
+      jobs: server.jobs?.length ? server.jobs : prev?.jobs ?? [],
+      applied: prev?.applied?.length ? prev.applied : server.applied ?? [],
+      lastScan: server.lastScan ?? prev?.lastScan ?? null,
+      cv: server.cv ?? prev?.cv ?? null,
+      aiEnabled: server.aiEnabled,
+      storeBackend: server.storeBackend,
+    }));
     setLoading(false);
   }, []);
 
   useEffect(() => {
     load();
   }, [load]);
+
+  // Mirror jobs/applied/cv to localStorage whenever they change.
+  useEffect(() => {
+    if (!data) return;
+    try {
+      window.localStorage.setItem(
+        LS,
+        JSON.stringify({ jobs: data.jobs, applied: data.applied, lastScan: data.lastScan, cv: data.cv, cvText })
+      );
+    } catch {
+      /* storage full / unavailable */
+    }
+  }, [data, cvText]);
 
   async function runScan() {
     setScanning(true);
@@ -49,9 +95,6 @@ export default function Dashboard() {
       const res = await fetch("/api/scan", { method: "POST" });
       const result = await res.json();
       if (!result.ok) throw new Error(result.error);
-      // Use the scan response directly so results show even when serverless
-      // in-memory storage lives on a different instance than the next GET.
-      // (Add Vercel KV for cross-request persistence — see README.)
       setData((prev) => ({
         jobs: result.jobs,
         applied: prev?.applied ?? [],
@@ -65,6 +108,12 @@ export default function Dashboard() {
     } finally {
       setScanning(false);
     }
+  }
+
+  function markApplied(jobId: string) {
+    setData((prev) =>
+      prev ? { ...prev, applied: prev.applied.includes(jobId) ? prev.applied : [...prev.applied, jobId] } : prev
+    );
   }
 
   const jobs = data?.jobs ?? [];
@@ -249,14 +298,29 @@ export default function Dashboard() {
       </footer>
 
       {coverJob && (
-        <CoverLetterModal job={coverJob} onClose={() => setCoverJob(null)} onApplied={() => load()} />
+        <CoverLetterModal
+          job={coverJob}
+          cvText={cvText}
+          onClose={() => setCoverJob(null)}
+          onApplied={markApplied}
+        />
       )}
-      {suggestJob && <CVSuggestionsModal job={suggestJob} onClose={() => setSuggestJob(null)} />}
+      {suggestJob && <CVSuggestionsModal job={suggestJob} cvText={cvText} onClose={() => setSuggestJob(null)} />}
       {showSettings && (
         <SettingsPanel
           onClose={() => setShowSettings(false)}
           cv={data?.cv ?? null}
-          onCVUpdated={() => load()}
+          onCVUpdated={(text, filename) => {
+            setCvText(text);
+            setData((prev) =>
+              prev
+                ? {
+                    ...prev,
+                    cv: { filename, updatedAt: new Date().toISOString(), wordCount: text.split(/\s+/).filter(Boolean).length },
+                  }
+                : prev
+            );
+          }}
         />
       )}
     </main>

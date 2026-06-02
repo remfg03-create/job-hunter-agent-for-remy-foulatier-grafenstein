@@ -18,7 +18,7 @@ export default function SettingsPanel({
 }: {
   onClose: () => void;
   cv: CVInfo | null;
-  onCVUpdated: () => void;
+  onCVUpdated: (text: string, filename: string) => void;
 }) {
   const [criteria, setCriteria] = useState<SearchCriteria | null>(null);
   const [saving, setSaving] = useState(false);
@@ -62,7 +62,7 @@ export default function SettingsPanel({
       const data = await res.json();
       if (!data.ok) throw new Error(data.error);
       setUploadMsg(`Parsed ${data.filename} — ${data.wordCount} words (${data.format}).`);
-      onCVUpdated();
+      onCVUpdated(data.text || "", data.filename);
     } catch (e) {
       setUploadErr((e as Error).message);
     } finally {

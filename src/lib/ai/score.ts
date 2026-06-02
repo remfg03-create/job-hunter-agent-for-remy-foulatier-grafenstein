@@ -70,7 +70,7 @@ async function scoreOne(cv: string, job: RawJob): Promise<ScoredJob> {
       messages: [
         {
           role: "user",
-          content: `CANDIDATE CV:\n${cv}\n\n----\n\nJOB POSTING:\n${jobBlock(job)}\n\nEvaluate the match and call report_match.`,
+          content: `CANDIDATE CV:\n${cv}\n\n----\n\nJOB POSTING:\n${jobBlock(job)}\n\nNote: the candidate is EARLY-CAREER / JUNIOR. Judge fit for THIS role's actual seniority — a senior/managerial posting should score lower for a junior, while junior/assistant/coordinator roles that match the skills should score higher. Evaluate and call report_match.`,
         },
       ],
     });
@@ -98,7 +98,12 @@ async function scoreOne(cv: string, job: RawJob): Promise<ScoredJob> {
   }
 }
 
-/** Transparent keyword-overlap fallback used when the API is unavailable. */
+/**
+ * Transparent keyword-overlap fallback used when the API is unavailable.
+ * Calibrated for an EARLY-CAREER / JUNIOR candidate: senior-titled roles are
+ * penalised and junior-friendly roles rewarded, producing a realistic spread
+ * (not everything at 10/10).
+ */
 function heuristicScore(cv: string, job: RawJob): ScoredJob {
   const cvLower = cv.toLowerCase();
   const terms = [
@@ -107,16 +112,30 @@ function heuristicScore(cv: string, job: RawJob): ScoredJob {
     "luxury", "lifestyle", "food", "beverage", "brand",
   ];
   const text = `${job.title} ${job.description}`.toLowerCase();
+  const title = job.title.toLowerCase();
   const matching = terms.filter((t) => text.includes(t) && cvLower.includes(t));
   const missing = terms.filter((t) => text.includes(t) && !cvLower.includes(t));
-  const score = Math.min(10, Math.max(2, 3 + matching.length));
+
+  const senior = /(senior|lead|head|director|principal|expérimenté|10\+|7\+|5\+ years|manager)/.test(title);
+  const junior = /(junior|assistant|coordinat|chargé|stage|intern|alternance|graduate|entry|trainee|werkstudent)/.test(title);
+
+  let score = 5 + Math.min(3, matching.length * 0.6);
+  if (junior) score += 1.5;
+  if (senior) score -= 2.5;
+  score = Math.max(2, Math.min(10, Math.round(score)));
+
+  const note = senior
+    ? "Likely a stretch for a junior profile (senior-level title), but transferable skills overlap."
+    : junior
+    ? "Well-suited to an early-career candidate — strong skill overlap and a junior-friendly level."
+    : "Solid overlap between the CV and the posting for an early-career candidate.";
+
   return {
     ...job,
     score,
     matchingSkills: matching,
     missingSkills: missing,
-    reasoning:
-      "Heuristic score (no ANTHROPIC_API_KEY set): based on keyword overlap between the CV and the posting. Add an API key for a real AI evaluation.",
+    reasoning: `${note} (Heuristic score — set ANTHROPIC_API_KEY for a full AI evaluation.)`,
     scoredAt: new Date().toISOString(),
   };
 }

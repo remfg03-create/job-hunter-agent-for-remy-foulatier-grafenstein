@@ -46,10 +46,43 @@ honest edits that would make the CV land better for THIS job. Prioritise surfaci
 existing-but-buried strengths and rephrasing to mirror the job's language. Never
 fabricate experience. Each suggestion needs a concrete, paste-ready example line.`;
 
+/** Template fallback when no API key is set — derives advice from the job's gaps. */
+function templateSuggestions(job: ScoredJob): CVSuggestion[] {
+  const out: CVSuggestion[] = [
+    {
+      section: "Professional summary",
+      suggestion: `Open your CV with a 2-line summary tailored to "${job.title}" at ${job.company}, framing yourself as a motivated junior in hospitality/events/marketing.`,
+      example: `Early-career sales & events professional (FR/EN) eager to grow in hospitality & lifestyle — internship experience in client outreach and event delivery.`,
+      priority: "high",
+    },
+    {
+      section: "Skills",
+      suggestion: "Mirror the exact keywords from this posting in your skills section so it passes screening.",
+      example: `Skills: ${[...job.matchingSkills, ...job.missingSkills].slice(0, 8).join(" · ") || "Sales · Events · Marketing · CRM · French · English"}`,
+      priority: "high",
+    },
+    {
+      section: "Experience bullets",
+      suggestion: "Rewrite internship bullets to lead with action verbs and quantified outcomes, even small numbers count for a junior.",
+      example: "Coordinated 8 brand events end-to-end (suppliers, budget, on-site), contributing to €120k of booked business.",
+      priority: "medium",
+    },
+  ];
+  for (const skill of job.missingSkills.slice(0, 2)) {
+    out.push({
+      section: "Address a gap",
+      suggestion: `The role asks for "${skill}" which is light on your CV. Surface any coursework, project or transferable experience, or note you're actively learning it.`,
+      example: `${skill}: gained through coursework and a student project; quick to apply in a professional setting.`,
+      priority: "low",
+    });
+  }
+  return out;
+}
+
 export async function generateCVSuggestions(cv: string, job: ScoredJob): Promise<CVSuggestion[]> {
   const client = getAnthropic();
   if (!client) {
-    throw new Error("ANTHROPIC_API_KEY is not set — add it to generate CV suggestions.");
+    return templateSuggestions(job);
   }
 
   const msg = await client.messages.create({

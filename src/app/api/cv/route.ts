@@ -32,6 +32,9 @@ export async function POST(req: NextRequest) {
       format: parsed.format,
       wordCount: parsed.wordCount,
       preview: parsed.text.slice(0, 600),
+      // Full text so the client can use the real uploaded CV for cover letters
+      // even when serverless instances don't share the in-memory store.
+      text: parsed.text,
     });
   } catch (err) {
     return NextResponse.json({ ok: false, error: (err as Error).message }, { status: 400 });
