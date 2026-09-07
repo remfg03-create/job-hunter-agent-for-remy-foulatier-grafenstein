@@ -138,7 +138,7 @@ Récupère le HTML, le nettoie, et fait extraire les postes par Claude via un to
 
 C'est ce mécanisme qui garantit la détection de l'ouverture de la campagne Grand Prix.
 
-**Réserve connue :** le listing de l'AGPC est rendu en JavaScript et n'expose ni flux ni API. La mention « no vacancies » étant présente dans le HTML brut, l'état des postes est bien dans la page, mais le parseur ne pourra être validé qu'à la première offre réellement ouverte. La détection de changement couvre l'intervalle.
+**Correction du 2026-09-07 :** l'AGPC ne recrute pas via ApplyNow mais via **ELMO Talent**, à l'adresse `https://grandprix.elmotalent.com.au/careers/AustralianGrandPrixCorporationEvents/`. Contrairement au portail ApplyNow, cette page est **rendue côté serveur** : les liens d'offres apparaissent en clair dans le HTML sous la forme `job/view/<id>`, vérifié le 2026-09-07 (une offre ouverte, `job/view/89`). L'AGPC devient donc une cible parsable par simple récupération HTML, sans navigateur headless ni extraction Claude. Aucun flux JSON ou RSS n'est exposé (404 sur `jobs.json`, `api/jobs`, `jobs/feed`, `rss`) : le parseur travaille sur le HTML.
 
 ## 6. Watchlist employeurs
 
@@ -146,7 +146,7 @@ Fichier de configuration versionné. Chaque entrée porte : nom, type de source,
 
 Cibles initiales (chaque identifiant à valider individuellement contre la page carrière officielle) :
 
-- Australian Grand Prix Corporation — `career-page`, priorité haute
+- Australian Grand Prix Corporation — `career-page` ELMO Talent (`grandprix.elmotalent.com.au/careers/AustralianGrandPrixCorporationEvents/`, liens `job/view/<id>` en HTML serveur) — **identifiant validé**, priorité haute
 - Tennis Australia / Australian Open — `workday` (`tenant: tennis`, `site: ta_careers`) — **identifiant validé**, priorité haute
 - Compass Group Australia — partenaire hospitality de l'AO
 - Melbourne & Olympic Parks
