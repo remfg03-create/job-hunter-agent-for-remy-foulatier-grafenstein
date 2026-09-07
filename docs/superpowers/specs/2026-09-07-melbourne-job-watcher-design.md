@@ -27,7 +27,7 @@ En parallèle, la cible du projet a changé. Les critères câblés (Paris / Ber
 
 L'événementiel sportif australien ne recrute pas en continu. Les campagnes ouvrent quelques semaines par an :
 
-- **Australian Open 2027 :** campagne casual ouverte du 24 juin au 12 juillet 2026 — **fermée**. Des postes individuels continuent d'être publiés hors campagne.
+- **Australian Open 2027 :** la campagne casual de masse était ouverte du 24 juin au 12 juillet 2026. **Le recrutement reste actif hors campagne** — vérifié le 2026-09-07 : 19 postes ouverts chez Tennis Australia, dont 11 à Melbourne et un publié le jour même. Entretiens HireVue et Teams en août-septembre, prise de poste des contrats casual à partir du 5 octobre 2026.
 - **Grand Prix de Melbourne 2027 :** recrutement non encore ouvert au 2026-09-07, ouverture annoncée « plus tard en 2026 ».
 
 Un agent qui score les offres du jour ne répond donc pas au besoin. La valeur est dans la **détection de l'ouverture des campagnes**.
@@ -48,6 +48,7 @@ Vérifiées le 2026-09-07.
 | Source | Statut vérifié | Rôle |
 |---|---|---|
 | Adzuna AU | endpoint `/jobs/au/` confirmé, `AUTH_FAIL` sans clé — clé gratuite | flux large quotidien |
+| **Workday (API CXS)** | **validé le 2026-09-07 : 19 offres réelles remontées chez Tennis Australia, sans authentification** | **employeurs sous Workday — source n°1** |
 | SmartRecruiters | API publique gratuite, contrôle positif Bosch = 4816 offres | employeurs à ATS connu |
 | Alertes mail LinkedIn / Seek | via l'OAuth Gmail déjà implémenté | couverture LinkedIn |
 | Pages carrières | extraction par Claude + détection de changement | AGPC et assimilés |
@@ -100,21 +101,36 @@ Le dashboard Next.js lit le JSON de la branche `data` en le récupérant depuis 
 
 Interface unique. Chaque adaptateur reçoit la configuration et retourne `RawJob[]`, ou lève une erreur — **jamais de fallback silencieux**.
 
-### 5.1 `adzuna-au`
+### 5.1 `workday` — adaptateur prioritaire, validé
+
+Workday expose une API JSON publique sans authentification :
+
+```
+POST https://{tenant}.wd3.myworkdayjobs.com/wday/cxs/{tenant}/{site}/jobs
+body: {"appliedFacets":{},"limit":20,"offset":0,"searchText":""}
+```
+
+Le détail d'un poste s'obtient en concaténant l'`externalPath` retourné à la même racine `/wday/cxs/{tenant}/{site}`.
+
+**Validé le 2026-09-07** sur Tennis Australia (`tenant: tennis`, `site: ta_careers`) : 19 offres réelles, avec titre, lieu, type de contrat, date de publication et description complète.
+
+L'adaptateur est générique et paramétré par `tenant` + `site`. Workday étant très répandu chez les grands employeurs australiens, il couvrira vraisemblablement plusieurs cibles de la watchlist.
+
+### 5.2 `adzuna-au`
 
 REST, clé gratuite (`app_id` + `app_key`). Requêtes ciblées : Melbourne croisé avec les familles de mots-clés événementiel, hospitality, festival, gastronomie, junior.
 
-### 5.2 `smartrecruiters`
+### 5.3 `smartrecruiters`
 
 Adaptateur générique paramétré par identifiant d'entreprise. Réutilisable pour tout employeur de la watchlist utilisant cet ATS.
 
-### 5.3 `gmail-alerts`
+### 5.4 `gmail-alerts`
 
 Lit les mails d'alerte emploi LinkedIn et Seek dans la boîte de l'utilisateur via l'OAuth Gmail existant, et en extrait les offres. Accès en lecture seule sur un filtre restreint aux expéditeurs d'alertes.
 
 Prérequis utilisateur : créer les alertes emploi côté LinkedIn et Seek.
 
-### 5.4 `career-page`
+### 5.5 `career-page`
 
 Récupère le HTML, le nettoie, et fait extraire les postes par Claude via un tool call forcé produisant du JSON structuré — même technique que le scoring actuel, pas de parsing de prose.
 
@@ -131,7 +147,7 @@ Fichier de configuration versionné. Chaque entrée porte : nom, type de source,
 Cibles initiales (chaque identifiant à valider individuellement contre la page carrière officielle) :
 
 - Australian Grand Prix Corporation — `career-page`, priorité haute
-- Tennis Australia / Australian Open — priorité haute
+- Tennis Australia / Australian Open — `workday` (`tenant: tennis`, `site: ta_careers`) — **identifiant validé**, priorité haute
 - Compass Group Australia — partenaire hospitality de l'AO
 - Melbourne & Olympic Parks
 - Victoria Racing Club — Melbourne Cup
