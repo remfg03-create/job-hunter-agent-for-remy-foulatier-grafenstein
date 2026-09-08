@@ -13,7 +13,8 @@
     "deploy": "bash scripts/deploy-vercel.sh",
     "publish": "bash scripts/publish-github.sh",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "watch": "tsx scripts/watch-once.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",

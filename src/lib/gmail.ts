@@ -124,3 +124,46 @@ export async function createDraft(opts: {
   const draftId = res.data.id || "";
   return { draftId, link: "https://mail.google.com/mail/u/0/#drafts" };
 }
+
+/**
+ * Envoie un message HTML (sans pièce jointe).
+ *
+ * Utilisé par le veilleur : un brouillon ne constitue pas une alerte, puisqu'il
+ * faudrait aller le consulter pour apprendre qu'une offre est parue. La portée
+ * `gmail.compose` déjà demandée couvre l'envoi, donc aucune ré-autorisation
+ * n'est nécessaire.
+ */
+export async function sendHtmlMessage(opts: {
+  to: string;
+  subject: string;
+  html: string;
+}): Promise<{ messageId: string }> {
+  const cfg = gmailConfig();
+  if (!cfg) throw new Error("Gmail is not configured (set GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET).");
+  if (!cfg.refreshToken) {
+    throw new Error("No GOOGLE_REFRESH_TOKEN — visit /api/gmail/auth once to authorise Gmail.");
+  }
+
+  const auth = oauthClient(cfg);
+  const gmail = google.gmail({ version: "v1", auth });
+  const from = cfg.user || "me";
+
+  const lines = [
+    `From: ${from}`,
+    `To: ${opts.to || from}`,
+    `Subject: ${mimeEncodeHeader(opts.subject)}`,
+    "MIME-Version: 1.0",
+    "Content-Type: text/html; charset=UTF-8",
+    "Content-Transfer-Encoding: 8bit",
+    "",
+    opts.html,
+  ];
+  const raw = Buffer.from(lines.join("\r\n"), "utf-8")
+    .toString("base64")
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
+
+  const res = await gmail.users.messages.send({ userId: "me", requestBody: { raw } });
+  return { messageId: res.data.id || "" };
+}
