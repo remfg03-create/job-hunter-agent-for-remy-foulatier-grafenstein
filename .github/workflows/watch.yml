@@ -1,0 +1,53 @@
+name: Veille emploi Melbourne
+
+on:
+  schedule:
+    - cron: "0 */6 * * *" # 4 fois par jour
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+        with:
+          ref: melbourne-watcher
+
+      - name: Récupérer l'état dans .watch-data
+        uses: actions/checkout@v4
+        with:
+          ref: data
+          path: .watch-data
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Passage de veille
+        env:
+          WATCH_STATE_PATH: .watch-data/data/watch-state.json
+          ALERT_EMAIL_TO: ${{ secrets.ALERT_EMAIL_TO }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
+        run: npm run watch
+
+      - name: Commiter l'état mis à jour
+        working-directory: .watch-data
+        run: |
+          git config user.name "job-hunter-agent"
+          git config user.email "actions@github.com"
+          if git diff --quiet; then
+            echo "Aucun changement d'état."
+            exit 0
+          fi
+          git add data/watch-state.json
+          git commit -m "chore(data): veille du $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push origin data
