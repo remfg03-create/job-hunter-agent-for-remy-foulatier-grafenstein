@@ -692,7 +692,9 @@ git commit -m "feat(watchlist): cibles surveillées, Tennis Australia validée"
 - Consomme : `JobPosting` de `@/lib/sources/types`.
 - Produit : `renderAlert(postings, brokenSources): { subject: string; html: string } | null`.
 
-L'envoi effectif réutilise `createDraft` de `src/lib/gmail.ts` (portée `gmail.compose`, qui autorise aussi l'envoi). Cette tâche ne couvre que le rendu, testable sans réseau.
+**Amendement du 2026-09-08 :** `src/lib/gmail.ts` n'expose que `createDraft`, qui crée un brouillon. Un brouillon n'est pas une alerte — il faudrait aller le consulter pour apprendre qu'une offre est parue. La tâche 6 ajoute donc `sendMessage()` à `gmail.ts`, qui envoie réellement via `gmail.users.messages.send`. La portée existante `gmail.compose` couvre l'envoi, donc aucune ré-autorisation n'est nécessaire. Noter aussi que `createDraft` attend `body`, et non `html`.
+
+Cette tâche ne couvre que le rendu, testable sans réseau.
 
 - [ ] **Step 1 : Écrire le test qui échoue**
 
