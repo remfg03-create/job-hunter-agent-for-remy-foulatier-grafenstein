@@ -12,10 +12,10 @@ jobs:
   watch:
     runs-on: ubuntu-latest
     steps:
+      # Sans `ref`, checkout prend la branche par défaut du dépôt (main).
+      # Ne jamais pointer une branche de travail ici : elle disparaît à la fusion.
       - name: Récupérer le code
         uses: actions/checkout@v4
-        with:
-          ref: melbourne-watcher
 
       - name: Récupérer l'état dans .watch-data
         uses: actions/checkout@v4
