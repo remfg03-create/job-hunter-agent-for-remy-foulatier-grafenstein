@@ -10,15 +10,34 @@ describe("WATCHLIST", () => {
     expect(new Set(WATCHLIST.map((t) => t.id)).size).toBe(WATCHLIST.length);
   });
 
-  it("contient Tennis Australia, le seul identifiant validé à ce jour", () => {
+  it("porte une configuration cohérente avec le type déclaré de chaque cible", () => {
+    for (const t of WATCHLIST) {
+      if (t.type === "workday") {
+        expect(t.workday.tenant).toBeTruthy();
+        expect(t.workday.site).toBeTruthy();
+      } else {
+        expect(t.elmo.host).toBeTruthy();
+        expect(t.elmo.site).toBeTruthy();
+      }
+      expect(t.employer).toBeTruthy();
+    }
+  });
+
+  it("contient Tennis Australia avec l'identifiant Workday validé", () => {
     const ta = WATCHLIST.find((t) => t.id === "tennis-australia");
-    expect(ta).toBeDefined();
-    expect(ta!.workday).toEqual({
+    expect(ta?.type).toBe("workday");
+    expect(ta && ta.type === "workday" ? ta.workday : null).toEqual({
       tenant: "tennis", site: "ta_careers", employer: "Tennis Australia",
     });
   });
 
-  it("ne déclare que des cibles de type workday dans cette version", () => {
-    for (const t of WATCHLIST) expect(t.type).toBe("workday");
+  it("surveille les deux portails AGPC, dont celui des postes événementiels", () => {
+    const agpc = WATCHLIST.filter((t) => t.type === "elmo" && t.elmo.host.startsWith("grandprix."));
+    expect(agpc).toHaveLength(2);
+    const sites = agpc.map((t) => (t.type === "elmo" ? t.elmo.site : ""));
+    expect(sites).toContain("AustralianGrandPrixCorporationHeadOffice");
+    expect(sites).toContain("AustralianGrandPrixCorporationEvents");
+    // L'ouverture de la campagne du Grand Prix est l'événement à ne pas manquer.
+    for (const t of agpc) expect(t.priority).toBe("high");
   });
 });

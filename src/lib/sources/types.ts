@@ -14,4 +14,9 @@ export interface JobPosting {
   postedOn?: string;
   /** Temps plein / temps partiel, tel que fourni par la source. */
   timeType?: string;
+  /**
+   * Date de clôture des candidatures, telle qu'affichée par la source.
+   * Déterminante sur l'événementiel saisonnier, où les campagnes ferment vite.
+   */
+  closesOn?: string;
 }

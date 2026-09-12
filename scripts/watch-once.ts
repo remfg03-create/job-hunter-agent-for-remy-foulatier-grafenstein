@@ -24,12 +24,22 @@ async function main() {
   await loadEnv();
   const statePath = process.env.WATCH_STATE_PATH || "data/watch-state.json";
 
-  const { newPostings, brokenSources } = await runWatch({ statePath });
+  const { newPostings, brokenSources, rejected } = await runWatch({ statePath });
 
   console.log(`Nouvelles offres : ${newPostings.length}`);
   for (const p of newPostings) {
     console.log(`  • ${p.title} — ${p.employer} (${p.location})`);
     console.log(`    ${p.url}`);
+  }
+  if (rejected.length) {
+    const horsZone = rejected.filter((r) => r.reason === "hors-zone").length;
+    const horsProfil = rejected.filter((r) => r.reason === "hors-profil").length;
+    console.log(
+      `Écartées : ${rejected.length} (${horsZone} hors zone, ${horsProfil} hors profil)`
+    );
+    for (const r of rejected) {
+      console.log(`  – ${r.posting.title} — ${r.posting.location} [${r.reason}]`);
+    }
   }
   if (brokenSources.length) console.log(`Sources cassées : ${brokenSources.join(", ")}`);
 

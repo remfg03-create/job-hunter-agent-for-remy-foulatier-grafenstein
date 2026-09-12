@@ -9,9 +9,20 @@
 export const APP_NAME = process.env.NEXT_PUBLIC_APP_USER_NAME || "Rémy Foulatier Gräfenstein";
 export const APP_TITLE = `Job Hunter Agent for ${APP_NAME}`;
 export const APP_TAGLINE =
-  "Your autonomous AI recruiter — scans 5 job boards 4× a day, scores every match against your CV, and drafts the application.";
+  "Veilleur emploi Melbourne — surveille les employeurs de l'événementiel sportif " +
+  "4 fois par jour, alerte à l'ouverture des campagnes, score chaque offre contre le CV.";
 
-export type ContractType = "fixed-term" | "permanent" | "internship" | "freelance";
+/**
+ * Types de contrat. "casual" et "seasonal" sont les formes dominantes de
+ * l'événementiel australien, et les plus accessibles sous WHV 417.
+ */
+export type ContractType =
+  | "casual"
+  | "seasonal"
+  | "fixed-term"
+  | "permanent"
+  | "internship"
+  | "freelance";
 
 export interface SearchCriteria {
   /** Job titles / role families to target. */
@@ -27,31 +38,46 @@ export interface SearchCriteria {
 }
 
 /**
- * Default criteria for Rémy: sales / events / marketing in the hospitality &
- * lifestyle space (think "We Are Ona"), based in Berlin or Paris, open to both
- * fixed-term and permanent contracts.
+ * Critères de Rémy — cible Melbourne, arbitrés avec lui le 2026-09-12.
+ *
+ * Deux familles retenues, dans cet ordre de priorité :
+ *   1. événementiel sportif — Grand Prix, Australian Open, MCG, Melbourne Cup ;
+ *   2. hospitality et gastronomie — plus gros volume, plus accessible en WHV.
+ *
+ * Communication/médias et marketing ont été écartés du périmètre de la veille
+ * (il candidate à un poste de communication à l'AGPC, mais ne veut pas que la
+ * veille remonte cette famille de postes).
+ *
+ * Contexte statutaire : Working Holiday Visa 417 visé, donc les postes exigeant
+ * la résidence permanente, la citoyenneté ou un sponsor sont hors cible.
  */
 export const DEFAULT_CRITERIA: SearchCriteria = {
   roles: [
-    "Sales",
-    "Business Development",
-    "Event Manager",
+    "Event Operations",
     "Event Coordinator",
-    "Marketing Manager",
-    "Brand Partnerships",
-    "Account Manager",
+    "Event Crew",
+    "Guest Experience",
+    "Customer Service",
+    "Hospitality Attendant",
+    "Food and Beverage Attendant",
+    "Bartender",
+    "Waiter",
   ],
-  locations: ["Berlin", "Paris"],
-  contractTypes: ["fixed-term", "permanent"],
+  locations: ["Melbourne"],
+  contractTypes: ["casual", "seasonal", "fixed-term"],
   keywords: [
+    "motorsport",
+    "Formula 1",
+    "Grand Prix",
+    "tennis",
+    "stadium",
+    "venue",
+    "festival",
+    "match day",
+    "race day",
     "hospitality",
-    "events",
-    "lifestyle",
     "food & beverage",
-    "experiential",
-    "creative agency",
-    "luxury",
-    "community",
+    "working holiday",
   ],
   languages: ["English", "French", "German"],
 };

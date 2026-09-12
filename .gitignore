@@ -34,3 +34,6 @@ next-env.d.ts
 # uploaded CVs (keep secrets / personal data out of git)
 /data/uploads/
 /tmp/
+
+# état du veilleur : versionné sur la branche `data`, pas sur `main`
+/data/watch-state.json

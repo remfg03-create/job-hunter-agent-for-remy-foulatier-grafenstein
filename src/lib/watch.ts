@@ -8,11 +8,13 @@
 
 import { WATCHLIST, type WatchTarget } from "@/lib/watchlist";
 import { fetchWorkdayJobs } from "@/lib/sources/workday";
+import { fetchElmoJobs, elmoSourceId } from "@/lib/sources/elmo";
 import type { JobPosting } from "@/lib/sources/types";
 import {
   loadState, saveState, recordSuccess, recordFailure, type WatchState,
 } from "@/lib/state";
 import { findNewPostings, applyPostings } from "@/lib/diff";
+import { screen, type Rejection } from "@/lib/relevance";
 
 /** Nombre d'échecs consécutifs avant de déclarer une source cassée. */
 export const BROKEN_AFTER_FAILURES = 3;
@@ -23,10 +25,25 @@ export interface WatchRunResult {
   newPostings: JobPosting[];
   /** Sources ayant atteint le seuil d'échecs consécutifs. */
   brokenSources: string[];
+  /**
+   * Offres écartées par le filtre lors de ce passage, avec leur motif.
+   * Rapportées pour que le filtrage reste visible et vérifiable : une offre
+   * écartée n'entre pas dans l'état, donc un assouplissement du filtre la
+   * fera réapparaître au passage suivant.
+   */
+  rejected: { posting: JobPosting; reason: Rejection }[];
   state: WatchState;
 }
 
-const defaultFetcher: Fetcher = (target) => fetchWorkdayJobs(target.workday);
+/** Clé de santé de la source, stable dans l'état d'un passage à l'autre. */
+export function sourceIdOf(target: WatchTarget): string {
+  return target.type === "workday"
+    ? `workday:${target.workday.tenant}`
+    : elmoSourceId(target.elmo);
+}
+
+const defaultFetcher: Fetcher = (target) =>
+  target.type === "workday" ? fetchWorkdayJobs(target.workday) : fetchElmoJobs(target.elmo);
 
 export async function runWatch(opts: {
   statePath: string;
@@ -40,12 +57,16 @@ export async function runWatch(opts: {
 
   let state = await loadState(opts.statePath);
   const collected: JobPosting[] = [];
+  const rejected: { posting: JobPosting; reason: Rejection }[] = [];
   const broken: string[] = [];
 
   for (const target of targets) {
-    const sourceId = `workday:${target.workday.tenant}`;
+    const sourceId = sourceIdOf(target);
     try {
-      collected.push(...(await fetcher(target)));
+      const found = await fetcher(target);
+      const sorted = screen(found, { assumeMelbourne: target.geo === "melbourne" });
+      collected.push(...sorted.kept);
+      rejected.push(...sorted.rejected);
       state = recordSuccess(state, sourceId, now);
     } catch (err) {
       console.warn(`[watch] ${sourceId} en échec — ${(err as Error).message}`);
@@ -60,5 +81,5 @@ export async function runWatch(opts: {
   state = applyPostings(state, collected, now);
   await saveState(opts.statePath, state);
 
-  return { newPostings, brokenSources: broken, state };
+  return { newPostings, brokenSources: broken, rejected, state };
 }

@@ -5,6 +5,13 @@ import { join } from "node:path";
 import { runWatch } from "@/lib/watch";
 import { loadState } from "@/lib/state";
 import type { JobPosting } from "@/lib/sources/types";
+import type { WatchTarget } from "@/lib/watchlist";
+
+const ONE_TARGET: WatchTarget = {
+  id: "tennis-australia", employer: "Tennis Australia", type: "workday",
+  workday: { tenant: "tennis", site: "ta_careers", employer: "Tennis Australia" },
+  priority: "high", geo: "multi-city",
+};
 
 const NOW = "2026-09-07T10:00:00.000Z";
 const statePath = () => join(mkdtempSync(join(tmpdir(), "w-")), "state.json");
@@ -40,11 +47,14 @@ describe("runWatch", () => {
   it("continue malgré l'échec d'une source et la déclare cassée après 3 échecs", async () => {
     const p = statePath();
     const failing = async () => { throw new Error("HTTP 503"); };
-    let r = await runWatch({ statePath: p, now: NOW, fetcher: failing });
+    // Cibles épinglées : le test porte sur le seuil d'échecs, pas sur le
+    // contenu de la watchlist de production, qui évolue.
+    const targets = [ONE_TARGET];
+    let r = await runWatch({ statePath: p, now: NOW, targets, fetcher: failing });
     expect(r.brokenSources).toEqual([]);
-    r = await runWatch({ statePath: p, now: NOW, fetcher: failing });
+    r = await runWatch({ statePath: p, now: NOW, targets, fetcher: failing });
     expect(r.brokenSources).toEqual([]);
-    r = await runWatch({ statePath: p, now: NOW, fetcher: failing });
+    r = await runWatch({ statePath: p, now: NOW, targets, fetcher: failing });
     expect(r.brokenSources).toEqual(["workday:tennis"]);
   });
 

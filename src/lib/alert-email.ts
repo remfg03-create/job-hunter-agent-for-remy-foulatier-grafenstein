@@ -36,7 +36,11 @@ export function renderAlert(
   <a href="${escapeHtml(p.url)}"><strong>${escapeHtml(p.title)}</strong></a><br>
   <span style="color:#555">${escapeHtml(p.employer)} · ${escapeHtml(p.location)}${
         p.timeType ? ` · ${escapeHtml(p.timeType)}` : ""
-      }${p.postedOn ? ` · ${escapeHtml(p.postedOn)}` : ""}</span>
+      }${p.postedOn ? ` · ${escapeHtml(p.postedOn)}` : ""}</span>${
+        p.closesOn
+          ? `<br><span style="color:#b00">Clôture : ${escapeHtml(p.closesOn)}</span>`
+          : ""
+      }
 </li>`
     )
     .join("\n");
