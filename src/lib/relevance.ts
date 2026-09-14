@@ -43,6 +43,13 @@ const OFF_PROFILE = [
   "engineer",
   "cyber",
   "data scientist",
+  // Ajouté le 2026-09-14 : « Head of Data, Analytics and Insights » était passé
+  // à travers le filtre lors du premier passage sur GitHub Actions.
+  "data",
+  "analytics",
+  "insights",
+  "business intelligence",
+  "analyst",
   "paralegal",
   "lawyer",
   "legal counsel",
