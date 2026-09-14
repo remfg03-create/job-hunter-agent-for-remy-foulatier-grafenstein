@@ -10,6 +10,7 @@
 
 import type { WorkdayConfig } from "@/lib/sources/workday";
 import type { ElmoConfig } from "@/lib/sources/elmo";
+import type { AdzunaConfig } from "@/lib/sources/adzuna";
 
 interface WatchTargetBase {
   /** Identifiant interne stable, en kebab-case. */
@@ -36,7 +37,13 @@ export interface ElmoTarget extends WatchTargetBase {
   elmo: ElmoConfig;
 }
 
-export type WatchTarget = WorkdayTarget | ElmoTarget;
+export interface AdzunaTarget extends WatchTargetBase {
+  type: "adzuna";
+  /** Les clés viennent de l'environnement, jamais du dépôt. */
+  adzuna: Omit<AdzunaConfig, "appId" | "appKey">;
+}
+
+export type WatchTarget = WorkdayTarget | ElmoTarget | AdzunaTarget;
 
 export const WATCHLIST: WatchTarget[] = [
   {
@@ -77,6 +84,36 @@ export const WATCHLIST: WatchTarget[] = [
     workday: { tenant: "tennis", site: "ta_careers", employer: "Tennis Australia" },
     priority: "high",
     // Recrute à Melbourne, Sydney, Brisbane, Adélaïde, Darwin et Canberra.
+    geo: "multi-city",
+  },
+  {
+    // Flux large : couvre ce qu'aucune liste d'employeurs ne peut couvrir.
+    // Termes arrêtés avec Rémy le 2026-09-14.
+    id: "adzuna-melbourne",
+    employer: "Adzuna (flux Melbourne)",
+    type: "adzuna",
+    adzuna: {
+      where: "melbourne",
+      maxDaysOld: 7,
+      resultsPerQuery: 20,
+      titleQueries: [
+        "event coordinator",
+        "events assistant",
+        "event crew",
+        "functions coordinator",
+        "catering",
+        "festival",
+        "venue",
+        "guest experience",
+        "marketing coordinator",
+        "production assistant",
+        "cinema",
+      ],
+      // Une annonce qui exige un francophone le dit dans le corps du texte.
+      bodyQueries: ["french speaking", "german speaking"],
+    },
+    priority: "normal",
+    // Adzuna indexe toute l'Australie : le filtre géographique reste actif.
     geo: "multi-city",
   },
 ];

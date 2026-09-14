@@ -9,6 +9,7 @@
 import { WATCHLIST, type WatchTarget } from "@/lib/watchlist";
 import { fetchWorkdayJobs } from "@/lib/sources/workday";
 import { fetchElmoJobs, elmoSourceId } from "@/lib/sources/elmo";
+import { fetchAdzunaJobs } from "@/lib/sources/adzuna";
 import type { JobPosting } from "@/lib/sources/types";
 import {
   loadState, saveState, recordSuccess, recordFailure, type WatchState,
@@ -37,13 +38,31 @@ export interface WatchRunResult {
 
 /** Clé de santé de la source, stable dans l'état d'un passage à l'autre. */
 export function sourceIdOf(target: WatchTarget): string {
-  return target.type === "workday"
-    ? `workday:${target.workday.tenant}`
-    : elmoSourceId(target.elmo);
+  switch (target.type) {
+    case "workday": return `workday:${target.workday.tenant}`;
+    case "elmo": return elmoSourceId(target.elmo);
+    case "adzuna": return "adzuna:au";
+  }
 }
 
-const defaultFetcher: Fetcher = (target) =>
-  target.type === "workday" ? fetchWorkdayJobs(target.workday) : fetchElmoJobs(target.elmo);
+const defaultFetcher: Fetcher = (target) => {
+  switch (target.type) {
+    case "workday":
+      return fetchWorkdayJobs(target.workday);
+    case "elmo":
+      return fetchElmoJobs(target.elmo);
+    case "adzuna": {
+      const appId = process.env.ADZUNA_APP_ID;
+      const appKey = process.env.ADZUNA_APP_KEY;
+      // Échec bruyant : une source sans clé ne doit pas passer pour une source
+      // sans résultat.
+      if (!appId || !appKey) {
+        throw new Error("ADZUNA_APP_ID ou ADZUNA_APP_KEY absent de l'environnement");
+      }
+      return fetchAdzunaJobs({ ...target.adzuna, appId, appKey });
+    }
+  }
+};
 
 export async function runWatch(opts: {
   statePath: string;

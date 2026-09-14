@@ -61,6 +61,10 @@ const OFF_PROFILE = [
   "experience designer",
   "compliance",
   "actuar",
+  // Rémy fait de la salle et du bar, pas de la cuisine : ces postes exigent
+  // une qualification culinaire qu'il n'a pas.
+  "chef",
+  "cook",
 ];
 
 /**

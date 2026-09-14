@@ -15,9 +15,11 @@ describe("WATCHLIST", () => {
       if (t.type === "workday") {
         expect(t.workday.tenant).toBeTruthy();
         expect(t.workday.site).toBeTruthy();
-      } else {
+      } else if (t.type === "elmo") {
         expect(t.elmo.host).toBeTruthy();
         expect(t.elmo.site).toBeTruthy();
+      } else {
+        expect(t.adzuna.titleQueries.length).toBeGreaterThan(0);
       }
       expect(t.employer).toBeTruthy();
     }
@@ -32,7 +34,9 @@ describe("WATCHLIST", () => {
   });
 
   it("surveille les deux portails AGPC, dont celui des postes événementiels", () => {
-    const agpc = WATCHLIST.filter((t) => t.type === "elmo" && t.elmo.host.startsWith("grandprix."));
+    const agpc = WATCHLIST.flatMap((t) =>
+      t.type === "elmo" && t.elmo.host.startsWith("grandprix.") ? [t] : []
+    );
     expect(agpc).toHaveLength(2);
     const sites = agpc.map((t) => (t.type === "elmo" ? t.elmo.site : ""));
     expect(sites).toContain("AustralianGrandPrixCorporationHeadOffice");
