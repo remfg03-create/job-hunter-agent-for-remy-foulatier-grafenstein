@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { screen, isInMelbourne, isOffProfile } from "@/lib/relevance";
+import { screen, isInMelbourne, isOffProfile, isTooSenior } from "@/lib/relevance";
 import type { JobPosting } from "@/lib/sources/types";
 
 const job = (title: string, location: string): JobPosting => ({
@@ -64,5 +64,27 @@ describe("screen", () => {
     const r = screen([job("Software Engineer", "Melbourne VIC")], { assumeMelbourne: true });
     expect(r.kept).toHaveLength(0);
     expect(r.rejected[0].reason).toBe("hors-profil");
+  });
+});
+
+describe("isTooSenior", () => {
+  it("écarte les postes de direction", () => {
+    expect(isTooSenior("Head of Data, Analytics and Insights")).toBe(true);
+    expect(isTooSenior("Director of Events")).toBe(true);
+    expect(isTooSenior("General Manager, Venues")).toBe(true);
+  });
+
+  it("conserve Lead et Manager, accessibles à un profil junior", () => {
+    // L'Events Lead des Saints, auquel Rémy a candidaté, doit passer.
+    expect(isTooSenior("Events Lead")).toBe(false);
+    expect(isTooSenior("Event Manager")).toBe(false);
+  });
+});
+
+describe("marketing", () => {
+  it("laisse passer les postes marketing, qui intéressent Rémy", () => {
+    for (const t of ["Marketing Coordinator", "Marketing Analyst", "Brand Activation Officer"]) {
+      expect(isOffProfile(t)).toBe(false);
+    }
   });
 });

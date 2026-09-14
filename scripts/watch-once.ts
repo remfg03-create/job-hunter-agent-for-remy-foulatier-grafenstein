@@ -34,8 +34,10 @@ async function main() {
   if (rejected.length) {
     const horsZone = rejected.filter((r) => r.reason === "hors-zone").length;
     const horsProfil = rejected.filter((r) => r.reason === "hors-profil").length;
+    const tropSenior = rejected.filter((r) => r.reason === "trop-senior").length;
     console.log(
-      `Écartées : ${rejected.length} (${horsZone} hors zone, ${horsProfil} hors profil)`
+      `Écartées : ${rejected.length} (${horsZone} hors zone, ${horsProfil} hors profil, ` +
+        `${tropSenior} trop senior)`
     );
     for (const r of rejected) {
       console.log(`  – ${r.posting.title} — ${r.posting.location} [${r.reason}]`);

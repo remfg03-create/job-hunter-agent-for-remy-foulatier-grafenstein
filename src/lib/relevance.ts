@@ -49,7 +49,6 @@ const OFF_PROFILE = [
   "analytics",
   "insights",
   "business intelligence",
-  "analyst",
   "paralegal",
   "lawyer",
   "legal counsel",
@@ -64,7 +63,20 @@ const OFF_PROFILE = [
   "actuar",
 ];
 
-export type Rejection = "hors-zone" | "hors-profil";
+/**
+ * Postes trop seniors pour un profil qui sort d'études. « Lead » et « Manager »
+ * sont volontairement absents : l'Events Lead des Saints, auquel Rémy candidate,
+ * serait passé à la trappe.
+ */
+const TOO_SENIOR = [
+  "head of",
+  "director",
+  "chief",
+  "general manager",
+  "vice president",
+];
+
+export type Rejection = "hors-zone" | "hors-profil" | "trop-senior";
 
 export interface ScreenResult {
   kept: JobPosting[];
@@ -85,6 +97,10 @@ export function isOffProfile(title: string): boolean {
   return matchesAny(title, OFF_PROFILE);
 }
 
+export function isTooSenior(title: string): boolean {
+  return matchesAny(title, TOO_SENIOR);
+}
+
 /**
  * Trie les offres d'une cible.
  *
@@ -103,6 +119,10 @@ export function screen(
   for (const p of postings) {
     if (isOffProfile(p.title)) {
       rejected.push({ posting: p, reason: "hors-profil" });
+      continue;
+    }
+    if (isTooSenior(p.title)) {
+      rejected.push({ posting: p, reason: "trop-senior" });
       continue;
     }
     if (!opts.assumeMelbourne && !isInMelbourne(p.location)) {
