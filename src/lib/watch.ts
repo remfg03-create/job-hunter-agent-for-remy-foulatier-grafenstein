@@ -85,9 +85,18 @@ export async function runWatch(opts: {
     const sourceId = sourceIdOf(target);
     try {
       const found = await fetcher(target);
+      const merged: Screening | undefined =
+        opts.screening || target.screening
+          ? {
+              offProfile: [],
+              tooSenior: [],
+              ...opts.screening,
+              ...target.screening,
+            }
+          : undefined;
       const sorted = screen(found, {
         assumeMelbourne: target.geo === "melbourne",
-        screening: opts.screening,
+        screening: merged,
       });
       collected.push(...sorted.kept);
       rejected.push(...sorted.rejected);

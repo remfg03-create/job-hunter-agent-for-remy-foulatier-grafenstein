@@ -32,7 +32,23 @@ export interface Profile {
  * conseil. Rien à voir avec l'événementiel sportif de Rémy, d'où un jeu de
  * requêtes distinct.
  */
+/**
+ * Intitulés d'entrée de carrière. Sert de surcharge sur les employeurs
+ * surveillés nommément : Matthieu veut leurs stages, pas leurs postes confirmés.
+ */
+const ENTRY_LEVEL_TERMS = [
+  "intern", "internship", "graduate", "trainee", "junior",
+  "cadet", "vacation", "placement", "entry level", "assistant", "casual",
+];
+
 const MATTHIEU_TARGETS: WatchTarget[] = [
+  // Mêmes employeurs que Rémy et Virgile, mais filtrés sur l'entrée de
+  // carrière : demandé le 2026-09-15, « si des offres de stages se montrent ».
+  ...WATCHLIST.filter((t) => t.type !== "adzuna").map((t) => ({
+    ...t,
+    id: `${t.id}-stages`,
+    screening: { requireAny: ENTRY_LEVEL_TERMS },
+  })),
   {
     id: "adzuna-melbourne-stage",
     employer: "Adzuna (flux Melbourne, stages)",

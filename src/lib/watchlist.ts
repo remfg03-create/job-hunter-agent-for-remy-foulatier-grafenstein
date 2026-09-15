@@ -11,6 +11,7 @@
 import type { WorkdayConfig } from "@/lib/sources/workday";
 import type { ElmoConfig } from "@/lib/sources/elmo";
 import type { AdzunaConfig } from "@/lib/sources/adzuna";
+import type { Screening } from "@/lib/relevance";
 
 interface WatchTargetBase {
   /** Identifiant interne stable, en kebab-case. */
@@ -25,6 +26,14 @@ interface WatchTargetBase {
    * "multi-city" : l'employeur recrute dans plusieurs villes, il faut filtrer.
    */
   geo: "melbourne" | "multi-city";
+  /**
+   * Resserrage propre à cette cible, fusionné par-dessus celui du profil.
+   *
+   * Un employeur surveillé nommément publie tous ses postes. Matthieu ne veut
+   * que les stages de l'AGPC et de Tennis Australia : sans cette surcharge, il
+   * recevrait aussi leurs postes de coordination confirmés.
+   */
+  screening?: Partial<Screening>;
 }
 
 export interface WorkdayTarget extends WatchTargetBase {
