@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastRunAt": "2026-09-15T13:41:21.345Z",
+  "lastRunAt": "2026-09-15T13:42:42.541Z",
   "knownJobIds": [
     "adzuna:5883631814",
     "adzuna:5880000351",
@@ -21,7 +21,7 @@
   ],
   "sourceHealth": {
     "adzuna:au": {
-      "lastSuccessAt": "2026-09-15T13:41:21.345Z",
+      "lastSuccessAt": "2026-09-15T13:42:42.541Z",
       "lastErrorAt": null,
       "consecutiveFailures": 0
     }
