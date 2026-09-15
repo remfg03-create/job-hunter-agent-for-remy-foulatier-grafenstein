@@ -51,19 +51,17 @@ async function main() {
     return;
   }
 
-  const to = process.env.ALERT_EMAIL_TO;
-  if (!to) {
-    console.log(`ALERT_EMAIL_TO absent — alerte non envoyée. Sujet : ${alert.subject}`);
+  const { mailerConfig, sendAlert } = await import("../src/lib/mailer");
+  const cfg = mailerConfig();
+  if (!cfg) {
+    console.log(
+      `Envoi non configuré (GMAIL_USER / GMAIL_APP_PASSWORD absents) — ` +
+        `alerte non envoyée. Sujet : ${alert.subject}`
+    );
     return;
   }
-
-  const { gmailConfig, sendHtmlMessage } = await import("../src/lib/gmail");
-  if (!gmailConfig()?.refreshToken) {
-    console.log(`Gmail non configuré — alerte non envoyée. Sujet : ${alert.subject}`);
-    return;
-  }
-  await sendHtmlMessage({ to, subject: alert.subject, html: alert.html });
-  console.log(`Alerte envoyée à ${to} : ${alert.subject}`);
+  const id = await sendAlert(cfg, alert.subject, alert.html);
+  console.log(`Alerte envoyée à ${cfg.to} : ${alert.subject} (${id})`);
 }
 
 main().catch((e) => {
