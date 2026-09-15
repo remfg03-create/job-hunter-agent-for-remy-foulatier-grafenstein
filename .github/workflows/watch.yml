@@ -46,10 +46,14 @@ jobs:
         run: |
           git config user.name "job-hunter-agent"
           git config user.email "actions@github.com"
-          if git diff --quiet; then
+          # git diff ne voit que les fichiers suivis. Les états par profil
+          # arrivent non suivis au premier passage : il faut donc les indexer
+          # AVANT de tester s'il y a quelque chose à commiter, sinon la
+          # condition sort et l'état n'est jamais sauvegardé.
+          git add data/
+          if git diff --cached --quiet; then
             echo "Aucun changement d'état."
             exit 0
           fi
-          git add data/
           git commit -m "chore(data): veille du $(date -u +%Y-%m-%dT%H:%MZ)"
           git push origin data
