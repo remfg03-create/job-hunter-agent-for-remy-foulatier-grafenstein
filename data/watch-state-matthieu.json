@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastRunAt": "2026-09-15T13:42:42.541Z",
+  "lastRunAt": "2026-09-15T15:09:21.809Z",
   "knownJobIds": [
     "adzuna:5883631814",
     "adzuna:5880000351",
@@ -17,11 +17,13 @@
     "adzuna:5883087184",
     "adzuna:5883087175",
     "adzuna:5883087102",
-    "adzuna:5880240793"
+    "adzuna:5880240793",
+    "adzuna:5879827655",
+    "adzuna:5884695735"
   ],
   "sourceHealth": {
     "adzuna:au": {
-      "lastSuccessAt": "2026-09-15T13:42:42.541Z",
+      "lastSuccessAt": "2026-09-15T15:09:21.809Z",
       "lastErrorAt": null,
       "consecutiveFailures": 0
     }
