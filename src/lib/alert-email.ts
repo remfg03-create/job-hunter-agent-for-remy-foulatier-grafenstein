@@ -41,6 +41,7 @@ export function renderAlert(
     .map((p) => {
       const h = highlight(p, opts);
       const badges =
+        (h.preferred ? chip("Junior", "#FFF4E5", "#8A5200") : "") +
         (h.majorEmployer ? chip("Grand groupe", "#E8F0FE", "#1A4FA0") : "") +
         (h.matchesMonth && opts.month
           ? chip(`Mentionne ${opts.month}`, "#E6F4EA", "#136B32")

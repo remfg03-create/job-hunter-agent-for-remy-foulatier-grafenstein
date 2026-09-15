@@ -137,13 +137,24 @@ const MAJOR_EMPLOYERS = [
 /** Un stagiaire ne vise pas ces intitulés. */
 const TOO_SENIOR_INTERN = [...TOO_SENIOR, "senior manager", "principal", "partner"];
 
+/** Intitulés que Rémy veut voir remonter en premier. */
+const JUNIOR_TERMS = [
+  "junior", "trainee", "graduate", "intern", "assistant",
+  "entry level", "casual", "crew", "attendant",
+];
+
 export const PROFILES: Profile[] = [
   {
     id: "remy",
     label: "Rémy — événementiel sportif et hospitality, Melbourne",
     recipientEnv: "ALERT_EMAIL_TO",
     targets: WATCHLIST,
-    screening: { offProfile: OFF_PROFILE_EVENTS, tooSenior: TOO_SENIOR },
+    screening: {
+      offProfile: OFF_PROFILE_EVENTS,
+      // « senior » ajouté le 2026-09-15 à sa demande.
+      tooSenior: [...TOO_SENIOR, "senior"],
+    },
+    highlight: { preferTitleTerms: JUNIOR_TERMS },
   },
   {
     id: "matthieu",

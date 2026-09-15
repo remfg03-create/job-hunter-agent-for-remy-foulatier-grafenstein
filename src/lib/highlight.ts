@@ -23,6 +23,8 @@ export interface Highlights {
   matchesMonth: boolean;
   /** L'employeur figure parmi les grands groupes suivis pour ce profil. */
   majorEmployer: boolean;
+  /** L'intitulé contient un des termes que le profil veut voir en premier. */
+  preferred: boolean;
 }
 
 export interface HighlightOptions {
@@ -34,6 +36,8 @@ export interface HighlightOptions {
    * du nombre d'annonces donnerait surtout des cabinets de recrutement.
    */
   majorEmployers?: string[];
+  /** Termes d'intitulé à remonter en tête, indépendamment de l'employeur. */
+  preferTitleTerms?: string[];
 }
 
 /** « paid » est contenu dans « unpaid » : on teste la négation d'abord. */
@@ -54,7 +58,11 @@ export function highlight(p: JobPosting, opts: HighlightOptions = {}): Highlight
   const majorEmployer = (opts.majorEmployers ?? []).some((m) =>
     employer.includes(m.toLowerCase())
   );
-  return { pay, matchesMonth, majorEmployer };
+  const title = p.title.toLowerCase();
+  const preferred = (opts.preferTitleTerms ?? []).some((t) =>
+    title.includes(t.toLowerCase())
+  );
+  return { pay, matchesMonth, majorEmployer, preferred };
 }
 
 /**
@@ -67,6 +75,7 @@ export function rank(postings: JobPosting[], opts: HighlightOptions = {}): JobPo
     let w = 0;
     if (h.matchesMonth) w -= 4;
     if (h.majorEmployer) w -= 3;
+    if (h.preferred) w -= 3;
     if (h.pay === "remunere") w -= 2;
     if (h.pay === "non-remunere") w += 3;
     return w;
