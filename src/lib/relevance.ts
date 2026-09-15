@@ -19,7 +19,7 @@ import type { JobPosting } from "@/lib/sources/types";
  * On ne teste pas « VIC » seul : cela ferait entrer Geelong ou Phillip Island,
  * hors du périmètre arrêté avec Rémy le 2026-09-12 (Melbourne uniquement).
  */
-const MELBOURNE = [
+export const MELBOURNE = [
   "melbourne",
   "albert park",
   "st kilda",
@@ -36,7 +36,7 @@ const MELBOURNE = [
  * Familles de métiers hors profil : technique, juridique, finance, santé,
  * design produit. Rémy vise l'événementiel sportif et l'hospitality.
  */
-const OFF_PROFILE = [
+export const OFF_PROFILE_EVENTS = [
   "architect",
   "developer",
   "software",
@@ -72,7 +72,7 @@ const OFF_PROFILE = [
  * sont volontairement absents : l'Events Lead des Saints, auquel Rémy candidate,
  * serait passé à la trappe.
  */
-const TOO_SENIOR = [
+export const TOO_SENIOR = [
   "head of",
   "director",
   "chief",
@@ -80,7 +80,7 @@ const TOO_SENIOR = [
   "vice president",
 ];
 
-export type Rejection = "hors-zone" | "hors-profil" | "trop-senior";
+export type Rejection = "hors-zone" | "hors-profil" | "trop-senior" | "hors-domaine";
 
 export interface ScreenResult {
   kept: JobPosting[];
@@ -97,12 +97,28 @@ export function isInMelbourne(location: string): boolean {
   return matchesAny(location, MELBOURNE);
 }
 
-export function isOffProfile(title: string): boolean {
-  return matchesAny(title, OFF_PROFILE);
+export interface Screening {
+  /** Familles de métiers hors du profil de la personne. */
+  offProfile: string[];
+  /** Intitulés trop seniors pour elle. */
+  tooSenior: string[];
+  /**
+   * Filtre inversé : si défini, l'intitulé doit contenir au moins un de ces
+   * termes. Nécessaire quand la requête source est trop large pour être
+   * corrigée par une liste d'exclusions — chercher « intern » remonte les
+   * stages de tous les métiers, et blacklister radiographie, orthophonie,
+   * design et réfrigération un par un est sans fin. Exiger le domaine est plus
+   * court et plus sûr.
+   */
+  requireAny?: string[];
 }
 
-export function isTooSenior(title: string): boolean {
-  return matchesAny(title, TOO_SENIOR);
+export function isOffProfile(title: string, list: string[] = OFF_PROFILE_EVENTS): boolean {
+  return matchesAny(title, list);
+}
+
+export function isTooSenior(title: string, list: string[] = TOO_SENIOR): boolean {
+  return matchesAny(title, list);
 }
 
 /**
@@ -115,18 +131,25 @@ export function isTooSenior(title: string): boolean {
  */
 export function screen(
   postings: JobPosting[],
-  opts: { assumeMelbourne: boolean }
+  opts: { assumeMelbourne: boolean; screening?: Screening }
 ): ScreenResult {
+  const off = opts.screening?.offProfile ?? OFF_PROFILE_EVENTS;
+  const senior = opts.screening?.tooSenior ?? TOO_SENIOR;
+  const require = opts.screening?.requireAny;
   const kept: JobPosting[] = [];
   const rejected: { posting: JobPosting; reason: Rejection }[] = [];
 
   for (const p of postings) {
-    if (isOffProfile(p.title)) {
+    if (isOffProfile(p.title, off)) {
       rejected.push({ posting: p, reason: "hors-profil" });
       continue;
     }
-    if (isTooSenior(p.title)) {
+    if (isTooSenior(p.title, senior)) {
       rejected.push({ posting: p, reason: "trop-senior" });
+      continue;
+    }
+    if (require && !matchesAny(p.title, require)) {
+      rejected.push({ posting: p, reason: "hors-domaine" });
       continue;
     }
     if (!opts.assumeMelbourne && !isInMelbourne(p.location)) {

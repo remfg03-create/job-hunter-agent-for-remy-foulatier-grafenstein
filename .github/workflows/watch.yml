@@ -32,8 +32,9 @@ jobs:
 
       - name: Passage de veille
         env:
-          WATCH_STATE_PATH: .watch-data/data/watch-state.json
+          WATCH_STATE_DIR: .watch-data/data
           ALERT_EMAIL_TO: ${{ secrets.ALERT_EMAIL_TO }}
+          ALERT_EMAIL_TO_MATTHIEU: ${{ secrets.ALERT_EMAIL_TO_MATTHIEU }}
           GMAIL_USER: ${{ secrets.GMAIL_USER }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
           ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
@@ -49,6 +50,6 @@ jobs:
             echo "Aucun changement d'état."
             exit 0
           fi
-          git add data/watch-state.json
+          git add data/
           git commit -m "chore(data): veille du $(date -u +%Y-%m-%dT%H:%MZ)"
           git push origin data

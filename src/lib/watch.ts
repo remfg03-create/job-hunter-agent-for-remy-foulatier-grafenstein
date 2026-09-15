@@ -15,7 +15,7 @@ import {
   loadState, saveState, recordSuccess, recordFailure, type WatchState,
 } from "@/lib/state";
 import { findNewPostings, applyPostings } from "@/lib/diff";
-import { screen, type Rejection } from "@/lib/relevance";
+import { screen, type Rejection, type Screening } from "@/lib/relevance";
 
 /** Nombre d'échecs consécutifs avant de déclarer une source cassée. */
 export const BROKEN_AFTER_FAILURES = 3;
@@ -68,6 +68,8 @@ export async function runWatch(opts: {
   statePath: string;
   now?: string;
   targets?: WatchTarget[];
+  /** Filtres de la personne surveillée. Par défaut, ceux de l'événementiel. */
+  screening?: Screening;
   fetcher?: Fetcher;
 }): Promise<WatchRunResult> {
   const now = opts.now ?? new Date().toISOString();
@@ -83,7 +85,10 @@ export async function runWatch(opts: {
     const sourceId = sourceIdOf(target);
     try {
       const found = await fetcher(target);
-      const sorted = screen(found, { assumeMelbourne: target.geo === "melbourne" });
+      const sorted = screen(found, {
+        assumeMelbourne: target.geo === "melbourne",
+        screening: opts.screening,
+      });
       collected.push(...sorted.kept);
       rejected.push(...sorted.rejected);
       state = recordSuccess(state, sourceId, now);

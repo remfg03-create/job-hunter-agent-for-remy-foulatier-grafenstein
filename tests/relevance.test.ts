@@ -88,3 +88,31 @@ describe("marketing", () => {
     }
   });
 });
+
+describe("requireAny — filtre inversé", () => {
+  const screening = {
+    offProfile: [] as string[],
+    tooSenior: [] as string[],
+    requireAny: ["finance", "sales", "retail", "event"],
+  };
+  const j = (title: string): JobPosting => ({
+    id: title, source: "t", employer: "E", title, location: "Melbourne VIC", url: "u",
+  });
+
+  it("garde les offres du domaine visé", () => {
+    const r = screen([j("Finance Intern"), j("Retail Assistant")], {
+      assumeMelbourne: true, screening,
+    });
+    expect(r.kept).toHaveLength(2);
+  });
+
+  it("écarte les stages des autres métiers", () => {
+    // Le cas réel : chercher « intern » remontait des stages en radiographie,
+    // orthophonie et design.
+    const r = screen([j("Graduate Radiographer"), j("UI/UX Designer Intern")], {
+      assumeMelbourne: true, screening,
+    });
+    expect(r.kept).toHaveLength(0);
+    expect(r.rejected.every((x) => x.reason === "hors-domaine")).toBe(true);
+  });
+});
