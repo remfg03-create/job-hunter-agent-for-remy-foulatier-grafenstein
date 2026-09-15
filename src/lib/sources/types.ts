@@ -19,4 +19,6 @@ export interface JobPosting {
    * Déterminante sur l'événementiel saisonnier, où les campagnes ferment vite.
    */
   closesOn?: string;
+  /** Résumé fourni par la source, utilisé pour détecter rémunération et dates. */
+  description?: string;
 }

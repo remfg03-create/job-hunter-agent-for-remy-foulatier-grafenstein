@@ -16,7 +16,10 @@ describe("renderAlert", () => {
   it("annonce le nombre d'offres dans l'objet", () => {
     const r = renderAlert([job("a", "Site Supervisor")], [])!;
     expect(r.subject).toContain("1");
-    expect(r.subject).toContain("Tennis Australia");
+    // Les noms d'employeurs sont bannis de l'objet : au-delà de trois offres il
+    // devenait illisible. Ils restent dans le corps du message.
+    expect(r.subject).not.toContain("Tennis Australia");
+    expect(r.html).toContain("Tennis Australia");
   });
 
   it("liste chaque offre avec son titre, son lieu et son lien", () => {

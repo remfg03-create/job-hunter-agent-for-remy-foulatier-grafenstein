@@ -6,6 +6,7 @@
  */
 
 import type { JobPosting } from "@/lib/sources/types";
+import { highlight, rank, type HighlightOptions } from "@/lib/highlight";
 
 function escapeHtml(s: string): string {
   return s
@@ -17,23 +18,37 @@ function escapeHtml(s: string): string {
 
 export function renderAlert(
   postings: JobPosting[],
-  brokenSources: string[]
+  brokenSources: string[],
+  opts: HighlightOptions = {}
 ): { subject: string; html: string } | null {
   if (postings.length === 0 && brokenSources.length === 0) return null;
 
-  const employers = [...new Set(postings.map((p) => p.employer))];
+  // Objet volontairement nu : la liste des employeurs le rendait illisible dès
+  // qu'il y avait plus de trois offres. Les noms sont dans le corps du message.
   const plural = postings.length > 1 ? "s" : "";
   const subject =
     postings.length > 0
-      ? `${postings.length} nouvelle${plural} offre${plural} — ${employers.join(", ")}`
+      ? `${postings.length} nouvelle${plural} offre${plural}`
       : `Veilleur : ${brokenSources.length} source${
           brokenSources.length > 1 ? "s" : ""
         } en échec`;
 
-  const rows = postings
-    .map(
-      (p) => `<li style="margin-bottom:10px">
-  <a href="${escapeHtml(p.url)}"><strong>${escapeHtml(p.title)}</strong></a><br>
+  const chip = (text: string, bg: string, fg: string) =>
+    `<span style="display:inline-block;font-size:11px;padding:1px 6px;border-radius:3px;` +
+    `background:${bg};color:${fg};margin-left:6px">${text}</span>`;
+
+  const rows = rank(postings, opts)
+    .map((p) => {
+      const h = highlight(p, opts);
+      const badges =
+        (h.majorEmployer ? chip("Grand groupe", "#E8F0FE", "#1A4FA0") : "") +
+        (h.matchesMonth && opts.month
+          ? chip(`Mentionne ${opts.month}`, "#E6F4EA", "#136B32")
+          : "") +
+        (h.pay === "remunere" ? chip("Rémunéré", "#E6F4EA", "#136B32") : "") +
+        (h.pay === "non-remunere" ? chip("Non rémunéré", "#FCE8E6", "#A8180B") : "");
+      return `<li style="margin-bottom:10px">
+  <a href="${escapeHtml(p.url)}"><strong>${escapeHtml(p.title)}</strong></a>${badges}<br>
   <span style="color:#555">${escapeHtml(p.employer)} · ${escapeHtml(p.location)}${
         p.timeType ? ` · ${escapeHtml(p.timeType)}` : ""
       }${p.postedOn ? ` · ${escapeHtml(p.postedOn)}` : ""}</span>${
@@ -41,8 +56,8 @@ export function renderAlert(
           ? `<br><span style="color:#b00">Clôture : ${escapeHtml(p.closesOn)}</span>`
           : ""
       }
-</li>`
-    )
+</li>`;
+    })
     .join("\n");
 
   const broken =

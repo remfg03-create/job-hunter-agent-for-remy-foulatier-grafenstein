@@ -116,3 +116,32 @@ describe("requireAny — filtre inversé", () => {
     expect(r.rejected.every((x) => x.reason === "hors-domaine")).toBe(true);
   });
 });
+
+describe("mise en avant", () => {
+  const p = (title: string, employer: string, description = ""): JobPosting => ({
+    id: title, source: "t", employer, title, location: "Melbourne VIC", url: "u", description,
+  });
+
+  it("place les grands groupes et janvier avant le reste", async () => {
+    const { rank } = await import("@/lib/highlight");
+    const opts = { month: "january", majorEmployers: ["nestle", "amer sports"] };
+    const ordered = rank(
+      [
+        p("Retail Assistant", "Petite boutique"),
+        p("Finance Intern", "Nestle Australia"),
+        p("Sales Intern", "Amer Sports", "starting January 2027, paid position"),
+      ],
+      opts
+    );
+    expect(ordered[0].employer).toBe("Amer Sports");
+    expect(ordered[1].employer).toBe("Nestle Australia");
+  });
+
+  it("relègue les stages explicitement non rémunérés", async () => {
+    const { rank, highlight } = await import("@/lib/highlight");
+    const unpaid = p("Marketing Intern", "X", "This is an unpaid internship");
+    expect(highlight(unpaid).pay).toBe("non-remunere");
+    const ordered = rank([unpaid, p("Finance Intern", "Y")]);
+    expect(ordered[1].title).toBe("Marketing Intern");
+  });
+});

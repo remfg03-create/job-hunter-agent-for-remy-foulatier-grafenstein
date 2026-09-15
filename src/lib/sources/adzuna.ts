@@ -50,6 +50,7 @@ interface AdzunaResult {
   redirect_url?: string;
   contract_type?: string;
   contract_time?: string;
+  description?: string;
   company?: { display_name?: string };
   location?: { display_name?: string };
 }
@@ -72,6 +73,7 @@ export function parseAdzunaJobs(query: string, payload: unknown): JobPosting[] {
       url: raw.redirect_url || "",
       postedOn: raw.created,
       timeType: [raw.contract_time, raw.contract_type].filter(Boolean).join(", ") || undefined,
+      description: raw.description?.trim() || undefined,
     });
   }
   return jobs;

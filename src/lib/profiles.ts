@@ -11,9 +11,12 @@
 
 import { WATCHLIST, type WatchTarget } from "@/lib/watchlist";
 import { OFF_PROFILE_EVENTS, TOO_SENIOR, type Screening } from "@/lib/relevance";
+import type { HighlightOptions } from "@/lib/highlight";
 
 export interface Profile {
   id: string;
+  /** Mise en avant appliquée au classement et aux pastilles de l'alerte. */
+  highlight?: HighlightOptions;
   label: string;
   /** Nom de la variable d'environnement contenant l'adresse du destinataire. */
   recipientEnv: string;
@@ -98,6 +101,39 @@ const FIELDS_FINANCE_COMMERCIAL = [
   "event", "partnership", "procurement", "supply chain", "customer",
 ];
 
+/**
+ * Grands groupes que Matthieu veut voir remonter en premier.
+ *
+ * Liste tenue à la main, volontairement : il n'existe pas de source gratuite et
+ * fiable de la taille des entreprises, et déduire la taille du nombre d'annonces
+ * ferait remonter les cabinets de recrutement, pas les employeurs.
+ */
+const MAJOR_EMPLOYERS = [
+  // conseil et audit
+  "deloitte", "pwc", "pricewaterhouse", "ernst", "ey ", "kpmg", "accenture",
+  "mckinsey", "boston consulting", "bain", "oliver wyman", "capgemini",
+  // agroalimentaire et boisson
+  "nestle", "nestlé", "danone", "unilever", "pepsico", "coca-cola", "mars ",
+  "mondelez", "mccain", "kellogg", "lion", "asahi", "carlton", "treasury wine",
+  "lactalis", "fonterra", "simplot",
+  // sport, outdoor et mode
+  "amer sports", "salomon", "arc'teryx", "arcteryx", "patagonia", "nike",
+  "adidas", "decathlon", "the north face", "columbia", "lululemon", "asics",
+  "new balance", "puma", "under armour", "kathmandu", "macpac", "rip curl",
+  // retail et distribution
+  "woolworths", "coles", "wesfarmers", "bunnings", "kmart", "target australia",
+  "myer", "david jones", "ikea", "lvmh", "kering", "richemont", "chanel",
+  // hôtellerie, restauration, événementiel
+  "compass group", "sodexo", "aramark", "accor", "marriott", "hilton", "hyatt",
+  "intercontinental", "delaware north", "levy",
+  // grandes entreprises australiennes
+  "qantas", "telstra", "bhp", "rio tinto", "anz", "national australia bank",
+  "westpac", "commonwealth bank", "macquarie", "transurban", "cochlear", "csl",
+  // logistique et industrie
+  "dhl", "kuehne", "nagel", "linde", "saint-gobain", "schneider electric",
+  "siemens", "bosch", "michelin", "downer", "nutrien",
+];
+
 /** Un stagiaire ne vise pas ces intitulés. */
 const TOO_SENIOR_INTERN = [...TOO_SENIOR, "senior manager", "principal", "partner"];
 
@@ -119,5 +155,6 @@ export const PROFILES: Profile[] = [
       tooSenior: TOO_SENIOR_INTERN,
       requireAny: FIELDS_FINANCE_COMMERCIAL,
     },
+    highlight: { month: "january", majorEmployers: MAJOR_EMPLOYERS },
   },
 ];

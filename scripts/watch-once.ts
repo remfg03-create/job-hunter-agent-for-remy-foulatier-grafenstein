@@ -49,7 +49,7 @@ async function runProfile(profile: Profile, stateDir: string): Promise<void> {
   }
   if (brokenSources.length) console.log(`Sources cassées : ${brokenSources.join(", ")}`);
 
-  const alert = renderAlert(newPostings, brokenSources);
+  const alert = renderAlert(newPostings, brokenSources, profile.highlight);
   if (!alert) {
     console.log("Rien à signaler — aucune alerte envoyée.");
     return;
