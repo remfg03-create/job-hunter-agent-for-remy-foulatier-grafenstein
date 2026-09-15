@@ -101,6 +101,20 @@ function searchUrl(cfg: AdzunaConfig, query: string, titleOnly: boolean): string
  * l'erreur remonte : une source muette ne doit jamais passer pour une source
  * sans résultat.
  */
+/**
+ * Cache d'un passage.
+ *
+ * Deux profils partagent l'essentiel de leurs termes. Sans cache, trois profils
+ * feraient plus de deux cents appels par jour et Adzuna a déjà répondu 503 lors
+ * d'une session de mise au point. Le cache est vidé à chaque processus, donc
+ * jamais de données périmées d'un passage à l'autre.
+ */
+const runCache = new Map<string, JobPosting[]>();
+
+export function clearAdzunaCache(): void {
+  runCache.clear();
+}
+
 export async function fetchAdzunaJobs(cfg: AdzunaConfig): Promise<JobPosting[]> {
   const seen = new Set<string>();
   const jobs: JobPosting[] = [];
@@ -112,6 +126,16 @@ export async function fetchAdzunaJobs(cfg: AdzunaConfig): Promise<JobPosting[]> 
   ];
 
   for (const { q: query, titleOnly } of all) {
+    const cacheKey = `${cfg.where ?? "melbourne"}|${cfg.maxDaysOld ?? 7}|${titleOnly}|${query}`;
+    const cached = runCache.get(cacheKey);
+    if (cached) {
+      for (const job of cached) {
+        if (seen.has(job.id)) continue;
+        seen.add(job.id);
+        jobs.push(job);
+      }
+      continue;
+    }
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 20_000);
     try {
@@ -120,7 +144,9 @@ export async function fetchAdzunaJobs(cfg: AdzunaConfig): Promise<JobPosting[]> 
         signal: controller.signal,
       });
       if (!res.ok) throw new Error(`Adzuna a répondu ${res.status}`);
-      for (const job of parseAdzunaJobs(query, await res.json())) {
+      const found = parseAdzunaJobs(query, await res.json());
+      runCache.set(cacheKey, found);
+      for (const job of found) {
         if (seen.has(job.id)) continue;
         seen.add(job.id);
         jobs.push(job);

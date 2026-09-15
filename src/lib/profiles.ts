@@ -10,6 +10,7 @@
  */
 
 import { WATCHLIST, type WatchTarget } from "@/lib/watchlist";
+import type { AdzunaTarget } from "@/lib/watchlist";
 import { OFF_PROFILE_EVENTS, TOO_SENIOR, type Screening } from "@/lib/relevance";
 import type { HighlightOptions } from "@/lib/highlight";
 
@@ -143,6 +144,26 @@ const JUNIOR_TERMS = [
   "entry level", "casual", "crew", "attendant",
 ];
 
+/**
+ * Cibles de Virgile : mêmes offres que Rémy, à une exception près.
+ *
+ * Il ne parle pas allemand : la requête « german speaking » est retirée, sinon
+ * il recevrait des postes exigeant une langue qu'il n'a pas. Son profil colle
+ * par ailleurs au reste — master marketing et business development, plusieurs
+ * éditions de Roland-Garros côté organisation, régie télé sur Roland-Garros et
+ * le Tour de France, vente en boutique événementielle. Tennis Australia, déjà
+ * surveillé, est pour lui la cible la plus évidente.
+ */
+const VIRGILE_TARGETS: WatchTarget[] = WATCHLIST.map((t) =>
+  t.type === "adzuna"
+    ? ({
+        ...t,
+        id: "adzuna-melbourne-virgile",
+        adzuna: { ...t.adzuna, bodyQueries: ["french speaking"] },
+      } satisfies AdzunaTarget)
+    : t
+);
+
 export const PROFILES: Profile[] = [
   {
     id: "remy",
@@ -152,6 +173,17 @@ export const PROFILES: Profile[] = [
     screening: {
       offProfile: OFF_PROFILE_EVENTS,
       // « senior » ajouté le 2026-09-15 à sa demande.
+      tooSenior: [...TOO_SENIOR, "senior"],
+    },
+    highlight: { preferTitleTerms: JUNIOR_TERMS },
+  },
+  {
+    id: "virgile",
+    label: "Virgile — événementiel sportif et marketing, Melbourne",
+    recipientEnv: "ALERT_EMAIL_TO_VIRGILE",
+    targets: VIRGILE_TARGETS,
+    screening: {
+      offProfile: OFF_PROFILE_EVENTS,
       tooSenior: [...TOO_SENIOR, "senior"],
     },
     highlight: { preferTitleTerms: JUNIOR_TERMS },

@@ -65,6 +65,14 @@ export const OFF_PROFILE_EVENTS = [
   // une qualification culinaire qu'il n'a pas.
   "chef",
   "cook",
+  // Retail de boutique : Rémy ne le veut que s'il est événementiel, et une
+  // vendeuse chez Nike ou Lorna Jane n'a rien d'un poste sur événement.
+  "retail assistant",
+  "retail sales",
+  "retail stylist",
+  "sales assistant",
+  "store manager",
+  "shop assistant",
 ];
 
 /**
