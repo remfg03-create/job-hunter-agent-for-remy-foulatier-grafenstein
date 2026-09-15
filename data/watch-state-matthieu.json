@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "lastRunAt": "2026-09-15T13:41:21.345Z",
+  "knownJobIds": [
+    "adzuna:5883631814",
+    "adzuna:5880000351",
+    "adzuna:5879430733",
+    "adzuna:5877125303",
+    "adzuna:5876567565",
+    "adzuna:5876089057",
+    "adzuna:5881078288",
+    "adzuna:5883631593",
+    "adzuna:5876444740",
+    "adzuna:5884422396",
+    "adzuna:5884284634",
+    "adzuna:5883792195",
+    "adzuna:5883087184",
+    "adzuna:5883087175",
+    "adzuna:5883087102",
+    "adzuna:5880240793"
+  ],
+  "sourceHealth": {
+    "adzuna:au": {
+      "lastSuccessAt": "2026-09-15T13:41:21.345Z",
+      "lastErrorAt": null,
+      "consecutiveFailures": 0
+    }
+  }
+}
