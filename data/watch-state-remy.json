@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastRunAt": "2026-09-21T04:36:45.663Z",
+  "lastRunAt": "2026-09-21T12:36:28.170Z",
   "knownJobIds": [
     "adzuna:5873126771",
     "adzuna:5875679714",
@@ -99,26 +99,28 @@
     "adzuna:5891220483",
     "adzuna:5890602428",
     "adzuna:5891000362",
-    "workday:tennis:Tennis-World---Customer-Experience-Supervisor---NSW_R5168"
+    "workday:tennis:Tennis-World---Customer-Experience-Supervisor---NSW_R5168",
+    "workday:tennis:Digital-Content-Lead_R5200-1",
+    "adzuna:5892685661"
   ],
   "sourceHealth": {
     "elmo:grandprix:AustralianGrandPrixCorporationHeadOffice": {
       "lastSuccessAt": "2026-09-18T11:01:34.660Z",
-      "lastErrorAt": "2026-09-21T04:36:45.663Z",
-      "consecutiveFailures": 11
+      "lastErrorAt": "2026-09-21T12:36:28.170Z",
+      "consecutiveFailures": 12
     },
     "elmo:grandprix:AustralianGrandPrixCorporationEvents": {
       "lastSuccessAt": "2026-09-18T11:01:34.660Z",
-      "lastErrorAt": "2026-09-21T04:36:45.663Z",
-      "consecutiveFailures": 11
+      "lastErrorAt": "2026-09-21T12:36:28.170Z",
+      "consecutiveFailures": 12
     },
     "workday:tennis": {
-      "lastSuccessAt": "2026-09-21T04:36:45.663Z",
+      "lastSuccessAt": "2026-09-21T12:36:28.170Z",
       "lastErrorAt": null,
       "consecutiveFailures": 0
     },
     "adzuna:au": {
-      "lastSuccessAt": "2026-09-21T04:36:45.663Z",
+      "lastSuccessAt": "2026-09-21T12:36:28.170Z",
       "lastErrorAt": null,
       "consecutiveFailures": 0
     }
