@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastRunAt": "2026-09-28T13:36:55.710Z",
+  "lastRunAt": "2026-09-28T23:10:16.042Z",
   "knownJobIds": [
     "adzuna:5873126771",
     "adzuna:5875679714",
@@ -162,26 +162,28 @@
     "adzuna:5900468089",
     "elmo:grandprix:90",
     "workday:tennis:Patron-Communications-Specialist---Digital-Content_R5202",
-    "adzuna:5901472300"
+    "adzuna:5901472300",
+    "adzuna:5901612223",
+    "adzuna:5901612159"
   ],
   "sourceHealth": {
     "elmo:grandprix:AustralianGrandPrixCorporationHeadOffice": {
-      "lastSuccessAt": "2026-09-28T13:36:55.710Z",
+      "lastSuccessAt": "2026-09-28T23:10:16.042Z",
       "lastErrorAt": "2026-09-27T21:14:20.222Z",
       "consecutiveFailures": 0
     },
     "elmo:grandprix:AustralianGrandPrixCorporationEvents": {
       "lastSuccessAt": "2026-09-18T11:01:34.660Z",
-      "lastErrorAt": "2026-09-28T13:36:55.710Z",
-      "consecutiveFailures": 39
+      "lastErrorAt": "2026-09-28T23:10:16.042Z",
+      "consecutiveFailures": 40
     },
     "workday:tennis": {
-      "lastSuccessAt": "2026-09-28T13:36:55.710Z",
+      "lastSuccessAt": "2026-09-28T23:10:16.042Z",
       "lastErrorAt": null,
       "consecutiveFailures": 0
     },
     "adzuna:au": {
-      "lastSuccessAt": "2026-09-28T13:36:55.710Z",
+      "lastSuccessAt": "2026-09-28T23:10:16.042Z",
       "lastErrorAt": null,
       "consecutiveFailures": 0
     }
