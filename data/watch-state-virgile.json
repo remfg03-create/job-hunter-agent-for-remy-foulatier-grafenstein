@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastRunAt": "2026-10-29T22:40:15.529Z",
+  "lastRunAt": "2026-10-30T05:28:28.411Z",
   "knownJobIds": [
     "elmo:grandprix:89",
     "workday:tennis:Workday-Functional-Lead--HCM-_R5195",
@@ -426,26 +426,27 @@
     "adzuna:5945453359",
     "adzuna:5945489708",
     "adzuna:5945455165",
-    "adzuna:5945811365"
+    "adzuna:5945811365",
+    "adzuna:5946154616"
   ],
   "sourceHealth": {
     "elmo:grandprix:AustralianGrandPrixCorporationHeadOffice": {
       "lastSuccessAt": "2026-10-19T12:51:31.768Z",
-      "lastErrorAt": "2026-10-29T22:40:15.529Z",
-      "consecutiveFailures": 38
+      "lastErrorAt": "2026-10-30T05:28:28.411Z",
+      "consecutiveFailures": 39
     },
     "elmo:grandprix:AustralianGrandPrixCorporationEvents": {
       "lastSuccessAt": "2026-10-19T12:51:31.768Z",
-      "lastErrorAt": "2026-10-29T22:40:15.529Z",
-      "consecutiveFailures": 38
+      "lastErrorAt": "2026-10-30T05:28:28.411Z",
+      "consecutiveFailures": 39
     },
     "workday:tennis": {
-      "lastSuccessAt": "2026-10-29T22:40:15.529Z",
+      "lastSuccessAt": "2026-10-30T05:28:28.411Z",
       "lastErrorAt": null,
       "consecutiveFailures": 0
     },
     "adzuna:au": {
-      "lastSuccessAt": "2026-10-29T22:40:15.529Z",
+      "lastSuccessAt": "2026-10-30T05:28:28.411Z",
       "lastErrorAt": null,
       "consecutiveFailures": 0
     }
