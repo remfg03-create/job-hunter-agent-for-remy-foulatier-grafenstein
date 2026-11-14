@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastRunAt": "2026-11-14T13:24:03.894Z",
+  "lastRunAt": "2026-11-14T22:14:35.325Z",
   "knownJobIds": [
     "adzuna:5883631814",
     "adzuna:5880000351",
@@ -576,26 +576,27 @@
     "adzuna:5964154006",
     "adzuna:5965262263",
     "adzuna:5964639138",
-    "adzuna:5965489081"
+    "adzuna:5965489081",
+    "adzuna:5966025402"
   ],
   "sourceHealth": {
     "adzuna:au": {
-      "lastSuccessAt": "2026-11-14T13:24:03.894Z",
+      "lastSuccessAt": "2026-11-14T22:14:35.325Z",
       "lastErrorAt": null,
       "consecutiveFailures": 0
     },
     "elmo:grandprix:AustralianGrandPrixCorporationHeadOffice": {
       "lastSuccessAt": "2026-10-19T12:51:36.809Z",
-      "lastErrorAt": "2026-11-14T13:24:03.894Z",
-      "consecutiveFailures": 79
+      "lastErrorAt": "2026-11-14T22:14:35.325Z",
+      "consecutiveFailures": 80
     },
     "elmo:grandprix:AustralianGrandPrixCorporationEvents": {
       "lastSuccessAt": "2026-10-19T12:51:36.809Z",
-      "lastErrorAt": "2026-11-14T13:24:03.894Z",
-      "consecutiveFailures": 79
+      "lastErrorAt": "2026-11-14T22:14:35.325Z",
+      "consecutiveFailures": 80
     },
     "workday:tennis": {
-      "lastSuccessAt": "2026-11-14T13:24:03.894Z",
+      "lastSuccessAt": "2026-11-14T22:14:35.325Z",
       "lastErrorAt": null,
       "consecutiveFailures": 0
     }
