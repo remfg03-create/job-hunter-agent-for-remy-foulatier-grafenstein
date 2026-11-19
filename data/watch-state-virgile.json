@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastRunAt": "2026-11-19T07:01:59.376Z",
+  "lastRunAt": "2026-11-19T20:24:32.781Z",
   "knownJobIds": [
     "elmo:grandprix:89",
     "workday:tennis:Workday-Functional-Lead--HCM-_R5195",
@@ -579,26 +579,29 @@
     "adzuna:5969157544",
     "adzuna:5970534598",
     "adzuna:5970338930",
-    "workday:tennis:Tennis-World-Sydney-Olympic-Park--Customer-Experience-Lead_R5374"
+    "workday:tennis:Tennis-World-Sydney-Olympic-Park--Customer-Experience-Lead_R5374",
+    "adzuna:5971264262",
+    "adzuna:5971576240",
+    "adzuna:5971295850"
   ],
   "sourceHealth": {
     "elmo:grandprix:AustralianGrandPrixCorporationHeadOffice": {
       "lastSuccessAt": "2026-10-19T12:51:31.768Z",
-      "lastErrorAt": "2026-11-19T07:01:59.376Z",
-      "consecutiveFailures": 89
+      "lastErrorAt": "2026-11-19T20:24:32.781Z",
+      "consecutiveFailures": 90
     },
     "elmo:grandprix:AustralianGrandPrixCorporationEvents": {
       "lastSuccessAt": "2026-10-19T12:51:31.768Z",
-      "lastErrorAt": "2026-11-19T07:01:59.376Z",
-      "consecutiveFailures": 89
+      "lastErrorAt": "2026-11-19T20:24:32.781Z",
+      "consecutiveFailures": 90
     },
     "workday:tennis": {
-      "lastSuccessAt": "2026-11-19T07:01:59.376Z",
+      "lastSuccessAt": "2026-11-19T20:24:32.781Z",
       "lastErrorAt": null,
       "consecutiveFailures": 0
     },
     "adzuna:au": {
-      "lastSuccessAt": "2026-11-19T07:01:59.376Z",
+      "lastSuccessAt": "2026-11-19T20:24:32.781Z",
       "lastErrorAt": null,
       "consecutiveFailures": 0
     }
