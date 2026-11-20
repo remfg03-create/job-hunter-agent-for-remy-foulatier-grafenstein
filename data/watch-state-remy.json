@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastRunAt": "2026-11-19T20:24:24.330Z",
+  "lastRunAt": "2026-11-20T06:54:12.383Z",
   "knownJobIds": [
     "adzuna:5873126771",
     "adzuna:5875679714",
@@ -586,26 +586,28 @@
     "workday:tennis:Tennis-World-Sydney-Olympic-Park--Customer-Experience-Lead_R5374",
     "adzuna:5971264262",
     "adzuna:5971576240",
-    "adzuna:5971295850"
+    "adzuna:5971295850",
+    "adzuna:5971848251",
+    "adzuna:5971755214"
   ],
   "sourceHealth": {
     "elmo:grandprix:AustralianGrandPrixCorporationHeadOffice": {
       "lastSuccessAt": "2026-10-19T12:51:21.504Z",
-      "lastErrorAt": "2026-11-19T20:24:24.330Z",
-      "consecutiveFailures": 90
+      "lastErrorAt": "2026-11-20T06:54:12.383Z",
+      "consecutiveFailures": 91
     },
     "elmo:grandprix:AustralianGrandPrixCorporationEvents": {
       "lastSuccessAt": "2026-10-19T12:51:21.504Z",
-      "lastErrorAt": "2026-11-19T20:24:24.330Z",
-      "consecutiveFailures": 90
+      "lastErrorAt": "2026-11-20T06:54:12.383Z",
+      "consecutiveFailures": 91
     },
     "workday:tennis": {
-      "lastSuccessAt": "2026-11-19T20:24:24.330Z",
+      "lastSuccessAt": "2026-11-20T06:54:12.383Z",
       "lastErrorAt": null,
       "consecutiveFailures": 0
     },
     "adzuna:au": {
-      "lastSuccessAt": "2026-11-19T20:24:24.330Z",
+      "lastSuccessAt": "2026-11-20T06:54:12.383Z",
       "lastErrorAt": null,
       "consecutiveFailures": 0
     }
